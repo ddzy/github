@@ -1,4 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:github/constants/constants.dart' show githubConfig;
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -10,6 +14,19 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  Future<void> login() async {
+    var url = Uri.parse('https://github.com/login/oauth/authorize').replace(
+      queryParameters: {
+        'client_id': githubConfig.clientId
+      },
+    );
+    try {
+      await launchUrl(url);
+    } catch (e) {
+      inspect(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,7 +40,7 @@ class _LoginState extends State<Login> {
             Expanded(
                 child: Center(
               child: Image.network(
-                'https://s3.cn-south-1.qiniucs.com/80wsnx/test/images/github.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=n4eSoB1ITSy1zcht0nQQ2XTLyYNsqCpUuOYEJ4m6%2F20231226%2Fcn-south-1%2Fs3%2Faws4_request&X-Amz-Date=20231226T025714Z&X-Amz-Expires=599&X-Amz-Signature=ce0d184be2b5e261ae0431e7adb4e310adc6cae47a6ff5b58a65ee099c012bd1&X-Amz-SignedHeaders=host',
+                'https://oss.yyge.top/test/images/github.png',
                 fit: BoxFit.contain,
                 width: 120,
                 height: 120,
@@ -32,7 +49,9 @@ class _LoginState extends State<Login> {
             Container(
               margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
               child: FilledButton(
-                onPressed: () {},
+                onPressed: () {
+                  login();
+                },
                 style: const ButtonStyle(
                     minimumSize: MaterialStatePropertyAll(Size.fromHeight(40)),
                     elevation: MaterialStatePropertyAll(1),
