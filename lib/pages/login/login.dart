@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:github/constants/constants.dart' show githubConfig;
@@ -16,9 +15,7 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   Future<void> login() async {
     var url = Uri.parse('https://github.com/login/oauth/authorize').replace(
-      queryParameters: {
-        'client_id': githubConfig.clientId
-      },
+      queryParameters: {'client_id': githubConfig.clientId},
     );
     try {
       await launchUrl(url);
