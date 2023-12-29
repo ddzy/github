@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../components/custom_bottom_navigation_bar/custom_bottom_navigation_bar.dart'
-    show CustomBottomNavigationBar;
 
 class NotificationPage extends StatefulWidget {
   const NotificationPage({super.key});
@@ -21,9 +19,6 @@ class _NotificationPageState extends State<NotificationPage> {
         ),
       ),
       body: Text('Notification'),
-      bottomNavigationBar: CustomBottomNavigationBar(
-        path: '/notification',
-      ),
     );
   }
 }

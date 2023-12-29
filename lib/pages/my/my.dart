@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../components/custom_bottom_navigation_bar/custom_bottom_navigation_bar.dart'
-    show CustomBottomNavigationBar;
 
 class MyPage extends StatefulWidget {
   const MyPage({super.key});
@@ -21,9 +19,6 @@ class _MyPageState extends State<MyPage> {
         ),
       ),
       body: Text('My'),
-      bottomNavigationBar: CustomBottomNavigationBar(
-        path: '/my',
-      ),
     );
   }
 }

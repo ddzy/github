@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class CustomBottomNavigationBar extends StatefulWidget {
-  const CustomBottomNavigationBar({super.key, required this.path});
-
-  final String path;
+  const CustomBottomNavigationBar({super.key});
 
   @override
   State<StatefulWidget> createState() {
@@ -18,7 +16,10 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   @override
   void initState() {
     // 设置默认选中
-    final defaultActiveIndex = _navList.indexWhere((element) => element.id == widget.path);
+    final path =
+        GoRouter.of(context).routerDelegate.currentConfiguration.uri.path;
+    final defaultActiveIndex =
+        _navList.indexWhere((element) => element.id == path);
     _currentActiveIndex = defaultActiveIndex == -1 ? 0 : defaultActiveIndex;
 
     super.initState();

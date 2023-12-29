@@ -8,6 +8,8 @@ import './pages/my/my.dart' show MyPage;
 import './pages/explore/explore.dart' show ExplorePage;
 import './pages/notification/notification.dart' show NotificationPage;
 import './constants/constants.dart' as constants;
+import 'components/custom_bottom_navigation_bar/custom_bottom_navigation_bar.dart'
+    show CustomBottomNavigationBar;
 
 void main() {
   runApp(MyApp());
@@ -18,35 +20,46 @@ class MyApp extends StatelessWidget {
 
   final GoRouter _router = GoRouter(
     routes: [
-      GoRoute(
-        path: '/',
-        redirect: (context, state) async {
-          // 每次 hotreload 时，根据 token 来判断跳到登录页或者停留在当前页
-          final storage = await SharedPreferences.getInstance();
-          var token =
-              storage.getString(constants.StorageTokens.githubAccessToken.name);
-          return token == null ? '/login' : '/home'; 
+      ShellRoute(
+        routes: [
+          GoRoute(
+            path: '/',
+            redirect: (context, state) async {
+              // 每次 hotreload 时，根据 token 来判断跳到登录页或者停留在当前页
+              final storage = await SharedPreferences.getInstance();
+              var token = storage
+                  .getString(constants.StorageTokens.githubAccessToken.name);
+              return token == null ? '/login' : '/my';
+            },
+          ),
+          GoRoute(
+            path: '/home',
+            builder: (context, state) => const HomePage(),
+          ),
+          GoRoute(
+            path: '/my',
+            builder: (context, state) => const MyPage(),
+          ),
+          GoRoute(
+            path: '/notification',
+            builder: (context, state) => const NotificationPage(),
+          ),
+          GoRoute(
+            path: '/explore',
+            builder: (context, state) => const ExplorePage(),
+          ),
+        ],
+        pageBuilder: (context, state, child) {
+          return MaterialPage(
+              child: Scaffold(
+            body: child,
+            bottomNavigationBar: const CustomBottomNavigationBar(),
+          ));
         },
       ),
       GoRoute(
         path: '/login',
         builder: (context, state) => const Login(),
-      ),
-      GoRoute(
-        path: '/home',
-        builder: (context, state) => const HomePage(),
-      ),
-      GoRoute(
-        path: '/my',
-        builder: (context, state) => const MyPage(),
-      ),
-      GoRoute(
-        path: '/notification',
-        builder: (context, state) => const NotificationPage(),
-      ),
-      GoRoute(
-        path: '/explore',
-        builder: (context, state) => const ExplorePage(),
       ),
     ],
     errorBuilder: (context, state) => const NotFound(),

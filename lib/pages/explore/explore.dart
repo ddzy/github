@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../components/custom_bottom_navigation_bar/custom_bottom_navigation_bar.dart'
-    show CustomBottomNavigationBar;
 
 class ExplorePage extends StatefulWidget {
   const ExplorePage({super.key});
@@ -21,9 +19,6 @@ class _ExplorePageState extends State<ExplorePage> {
         ),
       ),
       body: Text('Explore'),
-      bottomNavigationBar: CustomBottomNavigationBar(
-        path: '/explore',
-      ),
     );
   }
 }
