@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class CustomBottomNavigationBar extends StatefulWidget {
-  const CustomBottomNavigationBar({super.key});
+  const CustomBottomNavigationBar({super.key, required this.path});
+
+  final String path;
 
   @override
   State<StatefulWidget> createState() {
@@ -12,6 +14,15 @@ class CustomBottomNavigationBar extends StatefulWidget {
 
 class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   int _currentActiveIndex = 0;
+
+  @override
+  void initState() {
+    // 设置默认选中
+    final defaultActiveIndex = _navList.indexWhere((element) => element.id == widget.path);
+    _currentActiveIndex = defaultActiveIndex == -1 ? 0 : defaultActiveIndex;
+
+    super.initState();
+  }
 
   final List<_NavItem> _navList = [
     const _NavItem(
@@ -44,15 +55,6 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
 
   @override
   Widget build(BuildContext context) {
-    final path =
-        GoRouter.of(context).routerDelegate.currentConfiguration.uri.path;
-    final pendingActiveIndex = _navList.indexWhere(
-      (element) => element.id == path,
-    );
-    setState(() {
-      _currentActiveIndex = pendingActiveIndex == -1 ? 0 : pendingActiveIndex;
-    });
-
     return BottomNavigationBar(
       currentIndex: _currentActiveIndex,
       items: _buildNavItem(context),
@@ -61,7 +63,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
       onTap: (value) {
         setState(() {
           _currentActiveIndex = value;
-          GoRouter.of(context).go(_navList[_currentActiveIndex].id);
+          GoRouter.of(context).replace(_navList[_currentActiveIndex].id);
         });
       },
     );

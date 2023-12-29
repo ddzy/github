@@ -21,7 +21,9 @@ class _MyPageState extends State<MyPage> {
         ),
       ),
       body: Text('My'),
-      bottomNavigationBar: const CustomBottomNavigationBar(),
+      bottomNavigationBar: CustomBottomNavigationBar(
+        path: '/my',
+      ),
     );
   }
 }

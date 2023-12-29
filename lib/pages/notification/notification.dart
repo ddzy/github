@@ -19,11 +19,11 @@ class _NotificationPageState extends State<NotificationPage> {
         title: const Text(
           'Notification',
         ),
-        // iconTheme: const IconThemeData(color: Colors.white),
-        // actionsIconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Text('Notification'),
-      bottomNavigationBar: const CustomBottomNavigationBar(),
+      bottomNavigationBar: CustomBottomNavigationBar(
+        path: '/notification',
+      ),
     );
   }
 }

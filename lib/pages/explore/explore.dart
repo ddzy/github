@@ -19,11 +19,11 @@ class _ExplorePageState extends State<ExplorePage> {
         title: const Text(
           'Explore',
         ),
-        // iconTheme: const IconThemeData(color: Colors.white),
-        // actionsIconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Text('Explore'),
-      bottomNavigationBar: const CustomBottomNavigationBar(),
+      bottomNavigationBar: CustomBottomNavigationBar(
+        path: '/explore',
+      ),
     );
   }
 }

@@ -18,11 +18,11 @@ class _HomePageState extends State<HomePage> {
         title: const Text(
           'Home',
         ),
-        iconTheme: const IconThemeData(color: Colors.white),
-        actionsIconTheme: const IconThemeData(color: Colors.white),
       ),
-      body: Container(),
-      bottomNavigationBar: const CustomBottomNavigationBar(),
+      body: Text('Home'),
+      bottomNavigationBar: CustomBottomNavigationBar(
+        path: '/home',
+      ),
     );
   }
 }
