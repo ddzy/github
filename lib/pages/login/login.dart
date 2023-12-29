@@ -1,20 +1,20 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:github/constants/constants.dart' as constants;
+import 'package:github/constants/constants.dart' show $constants;
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class _Model {
-  String token = constants.githubConfig.accessToken;
+  String token = $constants.githubConfig.accessToken;
 
   void save(BuildContext context) async {
     try {
       final storage = await SharedPreferences.getInstance();
-      await storage.setString(constants.StorageTokens.githubAccessToken.name,
-          constants.githubConfig.accessToken);
+      await storage.setString($constants.storageToken.githubAccessToken,
+          $constants.githubConfig.accessToken);
       // 每两小时清除一次 token
       Timer.periodic(const Duration(hours: 2), (timer) async {
-        await storage.remove(constants.StorageTokens.githubAccessToken.name);
+        await storage.remove($constants.storageToken.githubAccessToken);
       });
 
       if (context.mounted) {

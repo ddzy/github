@@ -1,4 +1,4 @@
-class GithubConfigInterface {
+class IGithubConfigInterface {
   final String clientId = '718ba9b0d30af49ef1f1';
 
   /// Github OAuth 生成
@@ -11,7 +11,13 @@ class GithubConfigInterface {
 
   final String apiVersion = '2022-11-28';
 }
+class IStorageTokenInterface {
+  final String githubAccessToken = '__github_access_token__';
+}
+class $IConstantsInterface {
+  final IGithubConfigInterface githubConfig = IGithubConfigInterface();
+  final IStorageTokenInterface storageToken = IStorageTokenInterface();
+}
 
-final GithubConfigInterface githubConfig = GithubConfigInterface();
 
-enum StorageTokens { githubAccessToken }
+var $constants = $IConstantsInterface();

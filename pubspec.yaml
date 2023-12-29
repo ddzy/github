@@ -38,6 +38,8 @@ dependencies:
   go_router: ^13.0.0
   dio: ^5.4.0
   shared_preferences: ^2.2.2
+  json_annotation: ^4.8.1
+  json_serializable: ^6.7.1
 
 dev_dependencies:
   flutter_test:
