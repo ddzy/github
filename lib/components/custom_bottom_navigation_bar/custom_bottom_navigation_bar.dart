@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -13,7 +11,7 @@ class CustomBottomNavigationBar extends StatefulWidget {
 }
 
 class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
-  int _currentActiveNavIndex = 0;
+  int _currentActiveIndex = 0;
 
   final List<_NavItem> _navList = [
     const _NavItem(
@@ -32,21 +30,13 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
         icon: Icon(Icons.explore_outlined),
         activeIcon: Icon(Icons.explore)),
     const _NavItem(
-        id: '/profile',
-        label: 'Proifle',
+        id: '/my',
+        label: 'my',
         icon: Icon(Icons.person_2_outlined),
         activeIcon: Icon(Icons.person_2)),
   ];
 
   List<BottomNavigationBarItem> _buildNavItem(BuildContext context) {
-    final path =
-        GoRouter.of(context).routerDelegate.currentConfiguration.uri.path;
-    final activeIndex = _navList.indexWhere((element) => element.id == path);
-
-    setState(() {
-      _currentActiveNavIndex = activeIndex;
-    });
-
     return List<BottomNavigationBarItem>.from(_navList.map((e) =>
         BottomNavigationBarItem(
             icon: e.icon, label: e.label, activeIcon: e.activeIcon)));
@@ -54,14 +44,24 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
 
   @override
   Widget build(BuildContext context) {
+    final path =
+        GoRouter.of(context).routerDelegate.currentConfiguration.uri.path;
+    final pendingActiveIndex = _navList.indexWhere(
+      (element) => element.id == path,
+    );
+    setState(() {
+      _currentActiveIndex = pendingActiveIndex == -1 ? 0 : pendingActiveIndex;
+    });
+
     return BottomNavigationBar(
-      currentIndex: _currentActiveNavIndex,
+      currentIndex: _currentActiveIndex,
       items: _buildNavItem(context),
       selectedItemColor: Colors.blue,
       unselectedItemColor: Colors.grey,
       onTap: (value) {
         setState(() {
-          _currentActiveNavIndex = value;
+          _currentActiveIndex = value;
+          GoRouter.of(context).go(_navList[_currentActiveIndex].id);
         });
       },
     );
