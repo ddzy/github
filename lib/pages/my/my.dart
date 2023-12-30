@@ -1,7 +1,6 @@
-import 'dart:convert';
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
+import 'package:github/models/user_model.dart';
 import 'package:github/service/api.dart';
 
 class MyPage extends StatefulWidget {
@@ -14,6 +13,8 @@ class MyPage extends StatefulWidget {
 }
 
 class _MyPageState extends State<MyPage> {
+  late final UserModel _userModel;
+
   @override
   void initState() {
     _getUser();
@@ -23,7 +24,10 @@ class _MyPageState extends State<MyPage> {
   _getUser() async {
     try {
       var res = await $api.getUser();
-      inspect(jsonEncode(res.data));
+      var data = UserModel.fromJson(res.data);
+      setState(() {
+        _userModel = data;
+      });
     } catch (e) {
       VoidCallbackAction();
     }
