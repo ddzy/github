@@ -1,15 +1,20 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'user_model.g.dart';       
+part 'user_model.g.dart';
 
 @JsonSerializable(
   explicitToJson: true,
 )
 class UserModel {
+  @JsonKey(defaultValue: '')
   final String login;
+  @JsonKey(defaultValue: 0)
   final int id;
+  @JsonKey(defaultValue: '')
   final String avatar_url;
+  @JsonKey(defaultValue: 'https://iph.href.lu/879x200?fg=666666&bg=cccccc')
   final String name;
+  @JsonKey(defaultValue: '')
   final String bio;
   @JsonKey(defaultValue: '')
   final String company;
@@ -21,21 +26,21 @@ class UserModel {
   final int followers;
   @JsonKey(defaultValue: 0)
   final int following;
+  @JsonKey()
   final UserPlanModel plan;
 
-  const UserModel({
-    required this.login,
-    required this.id,
-    required this.avatar_url,
-    required this.name,
-    required this.bio,
-    required this.company,
-    required this.location,
-    required this.blog,
-    required this.followers,
-    required this.following,
-    required this.plan,  
-  });
+  UserModel(
+      {this.login = '',
+      this.id = 0,
+      this.avatar_url = 'https://iph.href.lu/879x200?fg=666666&bg=cccccc',
+      this.name = '',
+      this.bio = '',
+      this.company = '',
+      this.location = '',
+      this.blog = '',
+      this.followers = 0,
+      this.following = 0,
+      this.plan = const UserPlanModel(name: '', private_repos: 0)});
 
   factory UserModel.fromJson(json) {
     return _$UserModelFromJson(json);
