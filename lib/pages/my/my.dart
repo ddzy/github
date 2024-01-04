@@ -261,7 +261,7 @@ class _MyPageState extends State<MyPage> {
                       ),
                     ),
                     Container(
-                      margin: const EdgeInsets.symmetric(vertical: 12),
+                      margin: const EdgeInsets.only(top: 12),
                       padding: const EdgeInsets.fromLTRB(12, 20, 12, 20),
                       decoration: BoxDecoration(
                           border: Border(
@@ -292,85 +292,178 @@ class _MyPageState extends State<MyPage> {
                           Container(
                             height: 150,
                             margin: const EdgeInsets.only(top: 12),
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemBuilder: (context, index) {
-                                var item = parsedUser.pinnedItems.nodes[index];
-                                return Container(
-                                  width: 250,
-                                  margin: index == 0
-                                      ? const EdgeInsets.all(0)
-                                      : const EdgeInsets.only(left: 20),
-                                  padding: const EdgeInsets.all(20),
-                                  decoration: BoxDecoration(
-                                      border:
-                                          Border.all(color: Colors.grey[200]!)),
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        children: [
-                                          CircleAvatar(
-                                              radius: 10,
-                                              backgroundColor:
-                                                  Colors.grey.shade200,
-                                              backgroundImage: FadeInImage(
-                                                placeholder: MemoryImage(
-                                                    kTransparentImage),
-                                                image: NetworkImage(
-                                                    item.owner.avatarUrl),
-                                              ).image),
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(left: 6),
-                                            child: Text(item.owner.login),
-                                          )
-                                        ],
-                                      ),
-                                      Container(
-                                        alignment: Alignment.centerLeft,
-                                        margin: const EdgeInsets.only(top: 8),
-                                        child: Text(
-                                          item.name,
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ),
-                                      Container(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          emojiParser.emojify(item.description),
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                      const Spacer(),
-                                      Row(
-                                        children: [
-                                          const Icon(Icons.star,
-                                              color: Colors.yellow),
-                                          Text('${item.stargazerCount}'),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 6),
-                                            child: Icon(
-                                              Icons.circle,
-                                              size: 14,
-                                              color: Color(int.parse(item
-                                                  .primaryLanguage.color
-                                                  .replaceAll('#', '0xff'))),
+                            child: Material(
+                              color: Colors.white,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemBuilder: (context, index) {
+                                  var item =
+                                      parsedUser.pinnedItems.nodes[index];
+
+                                  return Container(
+                                    width: 250,
+                                    margin: index == 0
+                                        ? const EdgeInsets.all(0)
+                                        : const EdgeInsets.only(left: 20),
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: Colors.grey[200]!)),
+                                    child: InkWell(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(20),
+                                        child: Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                CircleAvatar(
+                                                    radius: 10,
+                                                    backgroundColor:
+                                                        Colors.grey.shade200,
+                                                    backgroundImage:
+                                                        FadeInImage(
+                                                      placeholder: MemoryImage(
+                                                          kTransparentImage),
+                                                      image: NetworkImage(
+                                                          item.owner.avatarUrl),
+                                                    ).image),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 6),
+                                                  child: Text(item.owner.login),
+                                                )
+                                              ],
                                             ),
-                                          ),
-                                          Text(item.primaryLanguage.name),
-                                        ],
+                                            Container(
+                                              alignment: Alignment.centerLeft,
+                                              margin:
+                                                  const EdgeInsets.only(top: 8),
+                                              child: Text(
+                                                item.name,
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                            Container(
+                                              alignment: Alignment.centerLeft,
+                                              child: Text(
+                                                emojiParser
+                                                    .emojify(item.description),
+                                                maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                            const Spacer(),
+                                            Row(
+                                              children: [
+                                                Icon(Icons.star,
+                                                    color:
+                                                        Colors.yellow.shade700),
+                                                Text('${item.stargazerCount}'),
+                                                Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(horizontal: 6),
+                                                  child: Icon(
+                                                    Icons.circle,
+                                                    size: 14,
+                                                    color: Color(int.parse(item
+                                                        .primaryLanguage.color
+                                                        .replaceAll(
+                                                            '#', '0xff'))),
+                                                  ),
+                                                ),
+                                                Text(item.primaryLanguage.name),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                    ],
-                                  ),
-                                );
-                              },
-                              itemCount: parsedUser.pinnedItems.nodes.length,
+                                      onTap: () {},
+                                    ),
+                                  );
+                                },
+                                itemCount: parsedUser.pinnedItems.nodes.length,
+                              ),
                             ),
                           ),
                         ],
+                      ),
+                    ),
+                    Container(
+                      decoration: const BoxDecoration(color: Colors.white),
+                      margin: const EdgeInsets.only(bottom: 12),
+                      child: Material(
+                        color: Colors.white,
+                        child: Column(
+                          children: [
+                            ListTile(
+                              leading: Container(
+                                alignment: Alignment.center,
+                                width: 30,
+                                height: 30,
+                                decoration: const BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(6)),
+                                  color: Colors.black,
+                                ),
+                                child: const Icon(
+                                  Icons.storefront,
+                                  color: Colors.white,
+                                  size: 16,
+                                ),
+                              ),
+                              title: const Text(
+                                '仓库',
+                              ),
+                              trailing:
+                                  Text('${parsedUser.repositories.totalCount}'),
+                              onTap: () {},
+                            ),
+                            ListTile(
+                              leading: Container(
+                                alignment: Alignment.center,
+                                width: 30,
+                                height: 30,
+                                decoration: const BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(6)),
+                                  color: Colors.orange,
+                                ),
+                                child: const Icon(
+                                  Icons.view_comfortable_outlined,
+                                  color: Colors.white,
+                                  size: 16,
+                                ),
+                              ),
+                              title: const Text('组织'),
+                              trailing: Text(
+                                  '${parsedUser.organizations.totalCount}'),
+                              onTap: () {},
+                            ),
+                            ListTile(
+                              leading: Container(
+                                alignment: Alignment.center,
+                                width: 30,
+                                height: 30,
+                                decoration: BoxDecoration(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(6)),
+                                  color: Colors.yellow.shade700,
+                                ),
+                                child: const Icon(
+                                  Icons.star_border,
+                                  color: Colors.white,
+                                  size: 16,
+                                ),
+                              ),
+                              title: const Text('已加星标'),
+                              trailing: Text(
+                                  '${parsedUser.starredRepositories.totalCount}'),
+                              onTap: () {},
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],

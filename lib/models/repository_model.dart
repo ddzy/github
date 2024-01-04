@@ -3,6 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'repository_model.g.dart';
 
+/// [RepositoryModel] https://docs.github.com/zh/graphql/reference/objects#repository
 @JsonSerializable(explicitToJson: true)
 class RepositoryModel {
   RepositoryModel({

@@ -52,6 +52,18 @@ class _Api {
               }
             }
           }
+          repositories(last: 0) {
+            totalCount
+            nodes {}
+          }
+          organizations(last: 0) {
+            totalCount
+            nodes {}
+          }
+          starredRepositories(last: 0) {
+            totalCount
+            nodes {}
+          }
         }
       }
     """;

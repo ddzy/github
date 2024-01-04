@@ -2,6 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'organization_model.g.dart';
 
+/// [OrganizationModel] https://docs.github.com/zh/graphql/reference/objects#organization
 @JsonSerializable(
   explicitToJson: true,
 )

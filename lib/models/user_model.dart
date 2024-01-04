@@ -4,6 +4,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'user_model.g.dart';
 
+/// [UserModel] https://docs.github.com/zh/graphql/reference/objects#user
 @JsonSerializable(
   explicitToJson: true,
 )
@@ -21,6 +22,9 @@ class UserModel {
   final UserFollowModel following;
   final UserStatusModel status;
   final UserPinnedItemsModel pinnedItems;
+  final UserRepositoriesModel repositories;
+  final UserOrganizationsModel organizations;
+  final UserStarredRepositoriesModel starredRepositories;
 
   UserModel({
     this.login = '',
@@ -36,6 +40,10 @@ class UserModel {
     this.following = const UserFollowModel(totalCount: 0),
     this.status = const UserStatusModel(message: '', emoji: '', emojiHTML: ''),
     this.pinnedItems = const UserPinnedItemsModel(totalCount: 0, nodes: []),
+    this.repositories = const UserRepositoriesModel(totalCount: 0, nodes: []),
+    this.organizations = const UserOrganizationsModel(totalCount: 0, nodes: []),
+    this.starredRepositories =
+        const UserStarredRepositoriesModel(totalCount: 0, nodes: []),
   });
 
   factory UserModel.fromJson(json) {
@@ -96,5 +104,62 @@ class UserPinnedItemsModel {
 
   Map<String, dynamic> toJson() {
     return _$UserPinnedItemsModelToJson(this);
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class UserRepositoriesModel {
+  const UserRepositoriesModel({
+    required this.totalCount,
+    required this.nodes,
+  });
+
+  final int totalCount;
+  final List<RepositoryModel> nodes;
+
+  factory UserRepositoriesModel.fromJson(json) {
+    return _$UserRepositoriesModelFromJson(json);
+  }
+
+  Map<String, dynamic> toJson() {
+    return _$UserRepositoriesModelToJson(this);
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class UserOrganizationsModel {
+  const UserOrganizationsModel({
+    required this.totalCount,
+    required this.nodes,
+  });
+
+  final int totalCount;
+  final List<OrganizationModel> nodes;
+
+  factory UserOrganizationsModel.fromJson(json) {
+    return _$UserOrganizationsModelFromJson(json);
+  }
+
+  Map<String, dynamic> toJson() {
+    return _$UserOrganizationsModelToJson(this);
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class UserStarredRepositoriesModel {
+  const UserStarredRepositoriesModel({
+    required this.totalCount,
+    required this.nodes,
+  });
+
+  final int totalCount;
+  final List<RepositoryModel> nodes;
+
+  factory UserStarredRepositoriesModel.fromJson(json) {
+    return _$UserStarredRepositoriesModelFromJson(json);
+  }
+
+  Map<String, dynamic> toJson() {
+    return _$UserStarredRepositoriesModelToJson(this);
   }
 }

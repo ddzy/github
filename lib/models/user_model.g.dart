@@ -30,6 +30,15 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
       pinnedItems: json['pinnedItems'] == null
           ? const UserPinnedItemsModel(totalCount: 0, nodes: [])
           : UserPinnedItemsModel.fromJson(json['pinnedItems']),
+      repositories: json['repositories'] == null
+          ? const UserRepositoriesModel(totalCount: 0, nodes: [])
+          : UserRepositoriesModel.fromJson(json['repositories']),
+      organizations: json['organizations'] == null
+          ? const UserOrganizationsModel(totalCount: 0, nodes: [])
+          : UserOrganizationsModel.fromJson(json['organizations']),
+      starredRepositories: json['starredRepositories'] == null
+          ? const UserStarredRepositoriesModel(totalCount: 0, nodes: [])
+          : UserStarredRepositoriesModel.fromJson(json['starredRepositories']),
     );
 
 Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
@@ -46,6 +55,9 @@ Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
       'following': instance.following.toJson(),
       'status': instance.status.toJson(),
       'pinnedItems': instance.pinnedItems.toJson(),
+      'repositories': instance.repositories.toJson(),
+      'organizations': instance.organizations.toJson(),
+      'starredRepositories': instance.starredRepositories.toJson(),
     };
 
 UserFollowModel _$UserFollowModelFromJson(Map<String, dynamic> json) =>
@@ -83,6 +95,54 @@ UserPinnedItemsModel _$UserPinnedItemsModelFromJson(
 
 Map<String, dynamic> _$UserPinnedItemsModelToJson(
         UserPinnedItemsModel instance) =>
+    <String, dynamic>{
+      'totalCount': instance.totalCount,
+      'nodes': instance.nodes.map((e) => e.toJson()).toList(),
+    };
+
+UserRepositoriesModel _$UserRepositoriesModelFromJson(
+        Map<String, dynamic> json) =>
+    UserRepositoriesModel(
+      totalCount: json['totalCount'] as int,
+      nodes: (json['nodes'] as List<dynamic>)
+          .map(RepositoryModel.fromJson)
+          .toList(),
+    );
+
+Map<String, dynamic> _$UserRepositoriesModelToJson(
+        UserRepositoriesModel instance) =>
+    <String, dynamic>{
+      'totalCount': instance.totalCount,
+      'nodes': instance.nodes.map((e) => e.toJson()).toList(),
+    };
+
+UserOrganizationsModel _$UserOrganizationsModelFromJson(
+        Map<String, dynamic> json) =>
+    UserOrganizationsModel(
+      totalCount: json['totalCount'] as int,
+      nodes: (json['nodes'] as List<dynamic>)
+          .map(OrganizationModel.fromJson)
+          .toList(),
+    );
+
+Map<String, dynamic> _$UserOrganizationsModelToJson(
+        UserOrganizationsModel instance) =>
+    <String, dynamic>{
+      'totalCount': instance.totalCount,
+      'nodes': instance.nodes.map((e) => e.toJson()).toList(),
+    };
+
+UserStarredRepositoriesModel _$UserStarredRepositoriesModelFromJson(
+        Map<String, dynamic> json) =>
+    UserStarredRepositoriesModel(
+      totalCount: json['totalCount'] as int,
+      nodes: (json['nodes'] as List<dynamic>)
+          .map(RepositoryModel.fromJson)
+          .toList(),
+    );
+
+Map<String, dynamic> _$UserStarredRepositoriesModelToJson(
+        UserStarredRepositoriesModel instance) =>
     <String, dynamic>{
       'totalCount': instance.totalCount,
       'nodes': instance.nodes.map((e) => e.toJson()).toList(),

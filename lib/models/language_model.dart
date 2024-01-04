@@ -2,6 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'language_model.g.dart';
 
+/// [LanguageModel] https://docs.github.com/zh/graphql/reference/objects#language
 @JsonSerializable(explicitToJson: true)
 class LanguageModel {
   const LanguageModel({
