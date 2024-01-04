@@ -8,6 +8,7 @@ import './pages/home/home.dart' show HomePage;
 import './pages/my/my.dart' show MyPage;
 import './pages/explore/explore.dart' show ExplorePage;
 import './pages/notification/notification.dart' show NotificationPage;
+import './pages/starred/starred.dart' show StarredPage;
 import './constants/constants.dart' show $constants;
 import 'components/custom_bottom_navigation_bar/custom_bottom_navigation_bar.dart'
     show CustomBottomNavigationBar;
@@ -61,11 +62,16 @@ class MyApp extends StatelessWidget {
           GoRoute(
             path: '/notification',
             builder: (context, state) => const NotificationPage(),
+            
           ),
           GoRoute(
             path: '/explore',
             builder: (context, state) => const ExplorePage(),
           ),
+          GoRoute(
+            path: '/starred',
+            builder: (context, state) => const StarredPage(),
+          )
         ],
         pageBuilder: (context, state, child) {
           return MaterialPage(

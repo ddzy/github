@@ -28,22 +28,22 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   final List<_NavItem> _navList = [
     const _NavItem(
         id: '/home',
-        label: 'Home',
+        label: '首页',
         icon: Icon(Icons.home_outlined),
         activeIcon: Icon(Icons.home)),
     const _NavItem(
         id: '/notification',
-        label: 'Notification',
+        label: '通知',
         icon: Icon(Icons.notification_add_outlined),
         activeIcon: Icon(Icons.notification_add)),
     const _NavItem(
         id: '/explore',
-        label: 'Explore',
+        label: '探索',
         icon: Icon(Icons.explore_outlined),
         activeIcon: Icon(Icons.explore)),
     const _NavItem(
         id: '/my',
-        label: 'my',
+        label: '我的',
         icon: Icon(Icons.person_2_outlined),
         activeIcon: Icon(Icons.person_2)),
   ];

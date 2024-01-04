@@ -7,6 +7,7 @@ import 'package:github/components/custom_empty/custom_empty.dart';
 import 'package:github/models/user_model.dart';
 import 'package:github/service/api.dart';
 import 'package:github/utils/utils.dart';
+import 'package:go_router/go_router.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:transparent_image/transparent_image.dart';
 
@@ -31,7 +32,7 @@ class _MyPageState extends State<MyPage> {
       appBar: AppBar(
         centerTitle: true,
         title: const Text(
-          'My',
+          '我的',
         ),
         actions: const [
           Padding(
@@ -460,7 +461,9 @@ class _MyPageState extends State<MyPage> {
                               title: const Text('已加星标'),
                               trailing: Text(
                                   '${parsedUser.starredRepositories.totalCount}'),
-                              onTap: () {},
+                              onTap: () {
+                                context.push('/starred');
+                              },
                             ),
                           ],
                         ),
