@@ -1,4 +1,5 @@
 import 'package:github/models/organization_model.dart';
+import 'package:github/models/repository_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'user_model.g.dart';
@@ -19,7 +20,7 @@ class UserModel {
   final UserFollowModel followers;
   final UserFollowModel following;
   final UserStatusModel status;
-  final List<OrganizationModel> organizations;
+  final UserPinnedItemsModel pinnedItems;
 
   UserModel({
     this.login = '',
@@ -34,7 +35,7 @@ class UserModel {
     this.followers = const UserFollowModel(totalCount: 0),
     this.following = const UserFollowModel(totalCount: 0),
     this.status = const UserStatusModel(message: '', emoji: '', emojiHTML: ''),
-    this.organizations = const [],
+    this.pinnedItems = const UserPinnedItemsModel(totalCount: 0, nodes: []),
   });
 
   factory UserModel.fromJson(json) {
@@ -63,7 +64,8 @@ class UserFollowModel {
 
 @JsonSerializable(explicitToJson: true)
 class UserStatusModel {
-  const UserStatusModel({required this.message, required this.emoji, required this.emojiHTML});
+  const UserStatusModel(
+      {required this.message, required this.emoji, required this.emojiHTML});
 
   final String message;
   final String emoji;
@@ -75,5 +77,24 @@ class UserStatusModel {
 
   Map<String, dynamic> toJson() {
     return _$UserStatusModelToJson(this);
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class UserPinnedItemsModel {
+  const UserPinnedItemsModel({
+    required this.totalCount,
+    required this.nodes,
+  });
+
+  final int totalCount;
+  final List<RepositoryModel> nodes;
+
+  factory UserPinnedItemsModel.fromJson(json) {
+    return _$UserPinnedItemsModelFromJson(json);
+  }
+
+  Map<String, dynamic> toJson() {
+    return _$UserPinnedItemsModelToJson(this);
   }
 }

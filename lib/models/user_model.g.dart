@@ -27,10 +27,9 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
       status: json['status'] == null
           ? const UserStatusModel(message: '', emoji: '', emojiHTML: '')
           : UserStatusModel.fromJson(json['status']),
-      organizations: (json['organizations'] as List<dynamic>?)
-              ?.map(OrganizationModel.fromJson)
-              .toList() ??
-          const [],
+      pinnedItems: json['pinnedItems'] == null
+          ? const UserPinnedItemsModel(totalCount: 0, nodes: [])
+          : UserPinnedItemsModel.fromJson(json['pinnedItems']),
     );
 
 Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
@@ -46,7 +45,7 @@ Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
       'followers': instance.followers.toJson(),
       'following': instance.following.toJson(),
       'status': instance.status.toJson(),
-      'organizations': instance.organizations.map((e) => e.toJson()).toList(),
+      'pinnedItems': instance.pinnedItems.toJson(),
     };
 
 UserFollowModel _$UserFollowModelFromJson(Map<String, dynamic> json) =>
@@ -71,4 +70,20 @@ Map<String, dynamic> _$UserStatusModelToJson(UserStatusModel instance) =>
       'message': instance.message,
       'emoji': instance.emoji,
       'emojiHTML': instance.emojiHTML,
+    };
+
+UserPinnedItemsModel _$UserPinnedItemsModelFromJson(
+        Map<String, dynamic> json) =>
+    UserPinnedItemsModel(
+      totalCount: json['totalCount'] as int,
+      nodes: (json['nodes'] as List<dynamic>)
+          .map(RepositoryModel.fromJson)
+          .toList(),
+    );
+
+Map<String, dynamic> _$UserPinnedItemsModelToJson(
+        UserPinnedItemsModel instance) =>
+    <String, dynamic>{
+      'totalCount': instance.totalCount,
+      'nodes': instance.nodes.map((e) => e.toJson()).toList(),
     };

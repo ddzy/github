@@ -23,6 +23,35 @@ class _Api {
             emoji
             emojiHTML
           }
+          pinnedItems(first: 20) {
+            totalCount
+            nodes {
+              ... on Repository {
+                id
+                name
+                description
+                owner {
+                  ... on Organization {
+                    id
+                    name
+                    avatarUrl
+                  }
+                  ... on User {
+                    id
+                    name
+                    avatarUrl
+                    login
+                  }
+                }
+                stargazerCount
+                primaryLanguage {
+                  id
+                  color
+                  name
+                }
+              }
+            }
+          }
         }
       }
     """;

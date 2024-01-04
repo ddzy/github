@@ -6,17 +6,13 @@ part 'organization_model.g.dart';
   explicitToJson: true,
 )
 class OrganizationModel {
-  OrganizationModel({
-    this.id = '',
-    this.name = '',
-    this.avatarUrl = ''
-  });
+  OrganizationModel({this.id = '', this.name = '', this.avatarUrl = ''});
 
   final String id;
   final String name;
   final String avatarUrl;
 
-    factory OrganizationModel.fromJson(json) {
+  factory OrganizationModel.fromJson(json) {
     return _$OrganizationModelFromJson(json);
   }
 
