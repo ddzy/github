@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_emoji/flutter_emoji.dart';
 import 'package:github/components/custom_empty/custom_empty.dart';
 import 'package:github/models/repository_model.dart';
 import 'package:github/models/user_model.dart';
@@ -23,6 +24,8 @@ class _StarredPageState extends State<StarredPage> {
   void initState() {
     super.initState();
   }
+
+  final EmojiParser emojiParser = EmojiParser();
 
   @override
   Widget build(BuildContext context) {
@@ -85,35 +88,38 @@ class _StarredPageState extends State<StarredPage> {
 
   Widget _buildListsSection(UserModel parsedData) {
     return Container(
-      padding: const EdgeInsets.all(12),
       decoration: const BoxDecoration(
         color: Colors.white,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Row(
-            children: [
-              const Icon(
-                Icons.list,
-                color: Colors.grey,
-              ),
-              const Padding(
-                padding: EdgeInsets.only(left: 12),
-                child: Text('我的列表'),
-              ),
-              const Spacer(),
-              TextButton.icon(
-                onPressed: () {},
-                icon: const Icon(Icons.add, color: Colors.blue),
-                label: const Text('新', style: TextStyle(color: Colors.blue)),
-              ),
-            ],
+          Container(
+            margin: const EdgeInsets.fromLTRB(12, 12, 12, 0),
+            child: Row(
+              children: [
+                const Icon(
+                  Icons.list,
+                  color: Colors.grey,
+                ),
+                const Padding(
+                  padding: EdgeInsets.only(left: 12),
+                  child: Text('我的列表'),
+                ),
+                const Spacer(),
+                TextButton.icon(
+                  onPressed: () {},
+                  icon: const Icon(Icons.add, color: Colors.blue),
+                  label: const Text('新', style: TextStyle(color: Colors.blue)),
+                ),
+              ],
+            ),
           ),
           Column(
             children: [
               ...parsedData.lists.nodes.map(
                 (e) => Card(
+                  margin: const EdgeInsets.fromLTRB(12, 0, 12, 12),
                   child: ListTile(
                     title: Text(e.name),
                     trailing: Text('${e.items.totalCount}'),
@@ -149,10 +155,13 @@ class _StarredPageState extends State<StarredPage> {
               ],
             ),
           ),
-          Column(
-            children: [
-              ...parsedData.starredRepositories.nodes.map((e) => _buildRepo(e)),
-            ],
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Column(
+              children: [
+                ...parsedData.starredRepositories.nodes.map((e) => _buildRepo(e)),
+              ],
+            ),
           ),
         ],
       ),
@@ -160,21 +169,67 @@ class _StarredPageState extends State<StarredPage> {
   }
 
   Widget _buildRepo(RepositoryModel data) {
-    return Card(
-      child: Column(
-        children: [
-          ListTile(
-            leading: CircleAvatar(
-              backgroundColor: Colors.grey.shade200,
-              backgroundImage: FadeInImage(
-                placeholder: MemoryImage(kTransparentImage),
-                image: NetworkImage(data.owner.avatarUrl),
-              ).image,
-            ),
-            title: Text(data.name),
-            subtitle: Text(data.description),
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      child: Card(
+        margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+        child: InkWell(
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
+          child: Column(
+            children: [
+              ListTile(
+                dense: true,
+                visualDensity: const VisualDensity(vertical: -2),
+                minVerticalPadding: -1,
+                contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+                title: Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 10,
+                      backgroundColor: Colors.grey.shade200,
+                      backgroundImage: FadeInImage(
+                        placeholder: MemoryImage(kTransparentImage),
+                        image: NetworkImage(data.owner.avatarUrl),
+                      ).image,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 6),
+                      child: Text(
+                        data.owner.login,
+                        style: const TextStyle(
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                subtitle: Text(
+                  data.name,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+                trailing: IconButton(
+                  onPressed: () {},
+                  icon: const Icon(
+                    Icons.more_horiz,
+                    color: Colors.grey,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+                child: Text(
+                  emojiParser.emojify(data.description),
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
           ),
-        ],
+          onTap: () {},
+        ),
       ),
     );
   }
