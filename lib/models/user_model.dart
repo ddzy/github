@@ -1,5 +1,6 @@
 import 'package:github/models/organization_model.dart';
 import 'package:github/models/repository_model.dart';
+import 'package:github/models/user_list_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'user_model.g.dart';
@@ -25,6 +26,7 @@ class UserModel {
   final UserRepositoriesModel repositories;
   final UserOrganizationsModel organizations;
   final UserStarredRepositoriesModel starredRepositories;
+  final UserListsModel lists; 
 
   UserModel({
     this.login = '',
@@ -36,14 +38,14 @@ class UserModel {
     this.location = '',
     this.websiteUrl = '',
     this.isDeveloperProgramMember = false,
-    this.followers = const UserFollowModel(totalCount: 0),
-    this.following = const UserFollowModel(totalCount: 0),
-    this.status = const UserStatusModel(message: '', emoji: '', emojiHTML: ''),
-    this.pinnedItems = const UserPinnedItemsModel(totalCount: 0, nodes: []),
-    this.repositories = const UserRepositoriesModel(totalCount: 0, nodes: []),
-    this.organizations = const UserOrganizationsModel(totalCount: 0, nodes: []),
-    this.starredRepositories =
-        const UserStarredRepositoriesModel(totalCount: 0, nodes: []),
+    this.followers = const UserFollowModel(),
+    this.following = const UserFollowModel(),
+    this.status = const UserStatusModel(),
+    this.pinnedItems = const UserPinnedItemsModel(),
+    this.repositories = const UserRepositoriesModel(),
+    this.organizations = const UserOrganizationsModel(),
+    this.starredRepositories = const UserStarredRepositoriesModel(),
+    this.lists = const UserListsModel(),
   });
 
   factory UserModel.fromJson(json) {
@@ -57,7 +59,7 @@ class UserModel {
 
 @JsonSerializable(explicitToJson: true)
 class UserFollowModel {
-  const UserFollowModel({required this.totalCount});
+  const UserFollowModel({this.totalCount = 0});
 
   final int totalCount;
 
@@ -72,8 +74,11 @@ class UserFollowModel {
 
 @JsonSerializable(explicitToJson: true)
 class UserStatusModel {
-  const UserStatusModel(
-      {required this.message, required this.emoji, required this.emojiHTML});
+  const UserStatusModel({
+    this.message = '',
+    this.emoji = '',
+    this.emojiHTML = '',
+  });
 
   final String message;
   final String emoji;
@@ -91,8 +96,8 @@ class UserStatusModel {
 @JsonSerializable(explicitToJson: true)
 class UserPinnedItemsModel {
   const UserPinnedItemsModel({
-    required this.totalCount,
-    required this.nodes,
+    this.totalCount = 0,
+    this.nodes = const [],
   });
 
   final int totalCount;
@@ -110,8 +115,8 @@ class UserPinnedItemsModel {
 @JsonSerializable(explicitToJson: true)
 class UserRepositoriesModel {
   const UserRepositoriesModel({
-    required this.totalCount,
-    required this.nodes,
+    this.totalCount = 0,
+    this.nodes = const [],
   });
 
   final int totalCount;
@@ -129,8 +134,8 @@ class UserRepositoriesModel {
 @JsonSerializable(explicitToJson: true)
 class UserOrganizationsModel {
   const UserOrganizationsModel({
-    required this.totalCount,
-    required this.nodes,
+    this.totalCount = 0,
+    this.nodes = const [],
   });
 
   final int totalCount;
@@ -148,18 +153,37 @@ class UserOrganizationsModel {
 @JsonSerializable(explicitToJson: true)
 class UserStarredRepositoriesModel {
   const UserStarredRepositoriesModel({
-    required this.totalCount,
-    required this.nodes,
+    this.totalCount = 0,
+    this.nodes = const [],
   });
 
   final int totalCount;
   final List<RepositoryModel> nodes;
 
   factory UserStarredRepositoriesModel.fromJson(json) {
-    return _$UserStarredRepositoriesModelFromJson(json);
+    return _$UserStarredRepositoriesModelFromJson(json); 
   }
 
   Map<String, dynamic> toJson() {
     return _$UserStarredRepositoriesModelToJson(this);
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class UserListsModel {
+  const UserListsModel({
+    this.totalCount = 0,
+    this.nodes = const [],
+  });
+
+  final int totalCount;
+  final List<UserListModel> nodes;
+
+  factory UserListsModel.fromJson(json) {
+    return _$UserListsModelFromJson(json);
+  }
+
+  Map<String, dynamic> toJson() {
+    return _$UserListsModelToJson(this);
   }
 }

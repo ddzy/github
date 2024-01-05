@@ -11,13 +11,14 @@ class IGithubConfigInterface {
 
   final String apiVersion = '2022-11-28';
 }
+
 class IStorageTokenInterface {
   final String githubAccessToken = '__github_access_token__';
 }
+
 class $IConstantsInterface {
   final IGithubConfigInterface githubConfig = IGithubConfigInterface();
   final IStorageTokenInterface storageToken = IStorageTokenInterface();
 }
-
 
 var $constants = $IConstantsInterface();

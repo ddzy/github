@@ -19,26 +19,29 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
       isDeveloperProgramMember:
           json['isDeveloperProgramMember'] as bool? ?? false,
       followers: json['followers'] == null
-          ? const UserFollowModel(totalCount: 0)
+          ? const UserFollowModel()
           : UserFollowModel.fromJson(json['followers']),
       following: json['following'] == null
-          ? const UserFollowModel(totalCount: 0)
+          ? const UserFollowModel()
           : UserFollowModel.fromJson(json['following']),
       status: json['status'] == null
-          ? const UserStatusModel(message: '', emoji: '', emojiHTML: '')
+          ? const UserStatusModel()
           : UserStatusModel.fromJson(json['status']),
       pinnedItems: json['pinnedItems'] == null
-          ? const UserPinnedItemsModel(totalCount: 0, nodes: [])
+          ? const UserPinnedItemsModel()
           : UserPinnedItemsModel.fromJson(json['pinnedItems']),
       repositories: json['repositories'] == null
-          ? const UserRepositoriesModel(totalCount: 0, nodes: [])
+          ? const UserRepositoriesModel()
           : UserRepositoriesModel.fromJson(json['repositories']),
       organizations: json['organizations'] == null
-          ? const UserOrganizationsModel(totalCount: 0, nodes: [])
+          ? const UserOrganizationsModel()
           : UserOrganizationsModel.fromJson(json['organizations']),
       starredRepositories: json['starredRepositories'] == null
-          ? const UserStarredRepositoriesModel(totalCount: 0, nodes: [])
+          ? const UserStarredRepositoriesModel()
           : UserStarredRepositoriesModel.fromJson(json['starredRepositories']),
+      lists: json['lists'] == null
+          ? const UserListsModel()
+          : UserListsModel.fromJson(json['lists']),
     );
 
 Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
@@ -58,11 +61,12 @@ Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
       'repositories': instance.repositories.toJson(),
       'organizations': instance.organizations.toJson(),
       'starredRepositories': instance.starredRepositories.toJson(),
+      'lists': instance.lists.toJson(),
     };
 
 UserFollowModel _$UserFollowModelFromJson(Map<String, dynamic> json) =>
     UserFollowModel(
-      totalCount: json['totalCount'] as int,
+      totalCount: json['totalCount'] as int? ?? 0,
     );
 
 Map<String, dynamic> _$UserFollowModelToJson(UserFollowModel instance) =>
@@ -72,9 +76,9 @@ Map<String, dynamic> _$UserFollowModelToJson(UserFollowModel instance) =>
 
 UserStatusModel _$UserStatusModelFromJson(Map<String, dynamic> json) =>
     UserStatusModel(
-      message: json['message'] as String,
-      emoji: json['emoji'] as String,
-      emojiHTML: json['emojiHTML'] as String,
+      message: json['message'] as String? ?? '',
+      emoji: json['emoji'] as String? ?? '',
+      emojiHTML: json['emojiHTML'] as String? ?? '',
     );
 
 Map<String, dynamic> _$UserStatusModelToJson(UserStatusModel instance) =>
@@ -87,10 +91,11 @@ Map<String, dynamic> _$UserStatusModelToJson(UserStatusModel instance) =>
 UserPinnedItemsModel _$UserPinnedItemsModelFromJson(
         Map<String, dynamic> json) =>
     UserPinnedItemsModel(
-      totalCount: json['totalCount'] as int,
-      nodes: (json['nodes'] as List<dynamic>)
-          .map(RepositoryModel.fromJson)
-          .toList(),
+      totalCount: json['totalCount'] as int? ?? 0,
+      nodes: (json['nodes'] as List<dynamic>?)
+              ?.map(RepositoryModel.fromJson)
+              .toList() ??
+          const [],
     );
 
 Map<String, dynamic> _$UserPinnedItemsModelToJson(
@@ -103,10 +108,11 @@ Map<String, dynamic> _$UserPinnedItemsModelToJson(
 UserRepositoriesModel _$UserRepositoriesModelFromJson(
         Map<String, dynamic> json) =>
     UserRepositoriesModel(
-      totalCount: json['totalCount'] as int,
-      nodes: (json['nodes'] as List<dynamic>)
-          .map(RepositoryModel.fromJson)
-          .toList(),
+      totalCount: json['totalCount'] as int? ?? 0,
+      nodes: (json['nodes'] as List<dynamic>?)
+              ?.map(RepositoryModel.fromJson)
+              .toList() ??
+          const [],
     );
 
 Map<String, dynamic> _$UserRepositoriesModelToJson(
@@ -119,10 +125,11 @@ Map<String, dynamic> _$UserRepositoriesModelToJson(
 UserOrganizationsModel _$UserOrganizationsModelFromJson(
         Map<String, dynamic> json) =>
     UserOrganizationsModel(
-      totalCount: json['totalCount'] as int,
-      nodes: (json['nodes'] as List<dynamic>)
-          .map(OrganizationModel.fromJson)
-          .toList(),
+      totalCount: json['totalCount'] as int? ?? 0,
+      nodes: (json['nodes'] as List<dynamic>?)
+              ?.map(OrganizationModel.fromJson)
+              .toList() ??
+          const [],
     );
 
 Map<String, dynamic> _$UserOrganizationsModelToJson(
@@ -135,14 +142,30 @@ Map<String, dynamic> _$UserOrganizationsModelToJson(
 UserStarredRepositoriesModel _$UserStarredRepositoriesModelFromJson(
         Map<String, dynamic> json) =>
     UserStarredRepositoriesModel(
-      totalCount: json['totalCount'] as int,
-      nodes: (json['nodes'] as List<dynamic>)
-          .map(RepositoryModel.fromJson)
-          .toList(),
+      totalCount: json['totalCount'] as int? ?? 0,
+      nodes: (json['nodes'] as List<dynamic>?)
+              ?.map(RepositoryModel.fromJson)
+              .toList() ??
+          const [],
     );
 
 Map<String, dynamic> _$UserStarredRepositoriesModelToJson(
         UserStarredRepositoriesModel instance) =>
+    <String, dynamic>{
+      'totalCount': instance.totalCount,
+      'nodes': instance.nodes.map((e) => e.toJson()).toList(),
+    };
+
+UserListsModel _$UserListsModelFromJson(Map<String, dynamic> json) =>
+    UserListsModel(
+      totalCount: json['totalCount'] as int? ?? 0,
+      nodes: (json['nodes'] as List<dynamic>?)
+              ?.map(UserListModel.fromJson)
+              .toList() ??
+          const [],
+    );
+
+Map<String, dynamic> _$UserListsModelToJson(UserListsModel instance) =>
     <String, dynamic>{
       'totalCount': instance.totalCount,
       'nodes': instance.nodes.map((e) => e.toJson()).toList(),

@@ -2,7 +2,7 @@ import 'package:github/models/language_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'repository_model.g.dart';
-
+ 
 /// [RepositoryModel] https://docs.github.com/zh/graphql/reference/objects#repository
 @JsonSerializable(explicitToJson: true)
 class RepositoryModel {
@@ -11,9 +11,9 @@ class RepositoryModel {
     this.name = '',
     this.description = '',
     this.stargazerCount = 0,
-    this.owner =
-        const RepositoryOwnerModel(id: '', name: '', avatarUrl: '', login: ''),
-    this.primaryLanguage = const LanguageModel()
+    this.owner = const RepositoryOwnerModel(
+    ),
+    this.primaryLanguage = const LanguageModel(),
   });
 
   final String id;
@@ -37,10 +37,10 @@ class RepositoryModel {
 )
 class RepositoryOwnerModel {
   const RepositoryOwnerModel({
-    required this.id,
-    required this.name,
-    required this.avatarUrl,
-    required this.login,
+    this.id = '',
+    this.name = '',
+    this.avatarUrl = '',
+    this.login = '',
   });
 
   final String id;

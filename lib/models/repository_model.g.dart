@@ -13,8 +13,7 @@ RepositoryModel _$RepositoryModelFromJson(Map<String, dynamic> json) =>
       description: json['description'] as String? ?? '',
       stargazerCount: json['stargazerCount'] as int? ?? 0,
       owner: json['owner'] == null
-          ? const RepositoryOwnerModel(
-              id: '', name: '', avatarUrl: '', login: '')
+          ? const RepositoryOwnerModel()
           : RepositoryOwnerModel.fromJson(json['owner']),
       primaryLanguage: json['primaryLanguage'] == null
           ? const LanguageModel()
@@ -34,10 +33,10 @@ Map<String, dynamic> _$RepositoryModelToJson(RepositoryModel instance) =>
 RepositoryOwnerModel _$RepositoryOwnerModelFromJson(
         Map<String, dynamic> json) =>
     RepositoryOwnerModel(
-      id: json['id'] as String,
-      name: json['name'] as String,
-      avatarUrl: json['avatarUrl'] as String,
-      login: json['login'] as String,
+      id: json['id'] as String? ?? '',
+      name: json['name'] as String? ?? '',
+      avatarUrl: json['avatarUrl'] as String? ?? '',
+      login: json['login'] as String? ?? '',
     );
 
 Map<String, dynamic> _$RepositoryOwnerModelToJson(
