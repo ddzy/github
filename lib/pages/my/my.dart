@@ -1,15 +1,14 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_emoji/flutter_emoji.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:github/components/custom_empty/custom_empty.dart';
 import 'package:github/models/user_model.dart';
-import 'package:github/service/api.dart';
 import 'package:github/utils/utils.dart';
 import 'package:go_router/go_router.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:transparent_image/transparent_image.dart';
+
+part 'gql.dart';
 
 class MyPage extends StatefulWidget {
   const MyPage({super.key});
@@ -46,8 +45,10 @@ class _MyPageState extends State<MyPage> {
         ],
       ),
       body: Query(
-          options:
-              QueryOptions(document: gql($api.getUser()), variables: const {}),
+          options: QueryOptions(
+              document: gql(genGql()),
+              variables: const {},
+              operationName: 'getUser'),
           builder: (QueryResult result,
               {VoidCallback? refetch, FetchMore? fetchMore}) {
             if (result.isLoading) {
@@ -56,7 +57,6 @@ class _MyPageState extends State<MyPage> {
               );
             }
             if (result.hasException) {
-              inspect(result.exception);
               return const Center(
                   child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -69,7 +69,6 @@ class _MyPageState extends State<MyPage> {
             }
 
             var user = result.data?['viewer'];
-            inspect(user);
             if (user == null) {
               return const Center(
                   child: Column(
@@ -79,7 +78,6 @@ class _MyPageState extends State<MyPage> {
             }
             UserModel parsedUser = UserModel.fromJson(user);
             EmojiParser emojiParser = EmojiParser();
-            inspect(parsedUser);
 
             return ListView(
               scrollDirection: Axis.vertical,

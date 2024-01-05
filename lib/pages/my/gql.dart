@@ -1,7 +1,8 @@
-class _Api {
-  String getUser() {
-    return """ 
-      query() {
+part of 'my.dart';
+
+String genGql() {
+  return """ 
+      query getUser() {
         viewer {
           id
           login
@@ -67,7 +68,4 @@ class _Api {
         }
       }
     """;
-  }
 }
-
-var $api = _Api();

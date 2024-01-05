@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
               final storage = await SharedPreferences.getInstance();
               var token =
                   storage.getString($constants.storageToken.githubAccessToken);
-              return token == null ? '/login' : '/my';
+              return token == null ? '/login' : '/starred';
             },
           ),
           GoRoute(
@@ -62,16 +62,11 @@ class MyApp extends StatelessWidget {
           GoRoute(
             path: '/notification',
             builder: (context, state) => const NotificationPage(),
-            
           ),
           GoRoute(
             path: '/explore',
             builder: (context, state) => const ExplorePage(),
           ),
-          GoRoute(
-            path: '/starred',
-            builder: (context, state) => const StarredPage(),
-          )
         ],
         pageBuilder: (context, state, child) {
           return MaterialPage(
@@ -84,6 +79,10 @@ class MyApp extends StatelessWidget {
       GoRoute(
         path: '/login',
         builder: (context, state) => const Login(),
+      ),
+      GoRoute(
+        path: '/starred',
+        builder: (context, state) => const StarredPage(),
       ),
     ],
     errorBuilder: (context, state) => const NotFound(),
