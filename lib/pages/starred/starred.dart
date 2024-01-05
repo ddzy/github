@@ -2,8 +2,10 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:github/components/custom_empty/custom_empty.dart';
+import 'package:github/models/repository_model.dart';
 import 'package:github/models/user_model.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 part 'gql.dart';
 
@@ -127,6 +129,53 @@ class _StarredPageState extends State<StarredPage> {
   }
 
   Widget _buildReposSection(UserModel parsedData) {
-    return Container();
+    return Container(
+      margin: const EdgeInsets.only(top: 20),
+      color: Colors.white,
+      child: Column(
+        children: [
+          const Padding(
+            padding: EdgeInsets.all(12),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.star_border,
+                  color: Colors.grey,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 12),
+                  child: Text('已加星标'),
+                ),
+              ],
+            ),
+          ),
+          Column(
+            children: [
+              ...parsedData.starredRepositories.nodes.map((e) => _buildRepo(e)),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRepo(RepositoryModel data) {
+    return Card(
+      child: Column(
+        children: [
+          ListTile(
+            leading: CircleAvatar(
+              backgroundColor: Colors.grey.shade200,
+              backgroundImage: FadeInImage(
+                placeholder: MemoryImage(kTransparentImage),
+                image: NetworkImage(data.owner.avatarUrl),
+              ).image,
+            ),
+            title: Text(data.name),
+            subtitle: Text(data.description),
+          ),
+        ],
+      ),
+    );
   }
 }

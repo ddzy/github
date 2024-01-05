@@ -10,6 +10,7 @@ class RepositoryModel {
     this.id = '',
     this.name = '',
     this.description = '',
+    this.descriptionHTML = '',
     this.stargazerCount = 0,
     this.owner = const RepositoryOwnerModel(
     ),
@@ -19,6 +20,7 @@ class RepositoryModel {
   final String id;
   final String name;
   final String description;
+  final String descriptionHTML;
   final int stargazerCount;
   final RepositoryOwnerModel owner;
   final LanguageModel primaryLanguage;

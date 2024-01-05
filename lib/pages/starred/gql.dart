@@ -19,6 +19,7 @@ String getInfo() {
           nodes {
             id
             name
+            description
             descriptionHTML
             stargazerCount
             primaryLanguage {
@@ -27,9 +28,17 @@ String getInfo() {
               color
             }
             owner {
-              id
-              login
-              avatarUrl
+              ... on Organization {
+                id
+                name
+                avatarUrl
+              }
+              ... on User {
+                id
+                name
+                avatarUrl
+                login
+              }
             }
           }
         }
