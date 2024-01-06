@@ -1,4 +1,5 @@
-import 'package:github/models/language_model.dart';
+import 'package:github/models/language_model/language_model.dart';
+import 'package:github/models/repository_model/repository_owner_interface.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'repository_model.g.dart';
@@ -12,7 +13,7 @@ class RepositoryModel {
     this.description = '',
     this.descriptionHTML = '',
     this.stargazerCount = 0,
-    this.owner = const RepositoryOwnerModel(
+    this.owner = const RepositoryOwnerInterface(
     ),
     this.primaryLanguage = const LanguageModel(),
   });
@@ -22,7 +23,7 @@ class RepositoryModel {
   final String description;
   final String descriptionHTML;
   final int stargazerCount;
-  final RepositoryOwnerModel owner;
+  final RepositoryOwnerInterface owner;
   final LanguageModel primaryLanguage;
 
   factory RepositoryModel.fromJson(json) {
@@ -34,25 +35,3 @@ class RepositoryModel {
   }
 }
 
-@JsonSerializable(
-  explicitToJson: true,
-)
-class RepositoryOwnerModel {
-  const RepositoryOwnerModel({
-    this.id = '',
-    this.name = '',
-    this.avatarUrl = '',
-  });
-
-  final String id;
-  final String name;
-  final String avatarUrl;
-
-  factory RepositoryOwnerModel.fromJson(json) {
-    return _$RepositoryOwnerModelFromJson(json);
-  }
-
-  Map<String, dynamic> toJson() {
-    return _$RepositoryOwnerModelToJson(this);
-  }
-}

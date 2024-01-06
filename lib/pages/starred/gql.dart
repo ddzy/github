@@ -14,7 +14,7 @@ String getInfo() {
             }
           }
         }
-        starredRepositories(last: 10) {
+        starredRepositories(last: 10, orderBy: { direction: DESC, field: STARRED_AT }) {
           totalCount
           nodes {
             id
@@ -39,6 +39,10 @@ String getInfo() {
                 avatarUrl
               }
             }
+          }
+          pageInfo {
+            endCursor
+            hasNextPage
           }
         }
       }

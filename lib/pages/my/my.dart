@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_emoji/flutter_emoji.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:github/components/custom_empty/custom_empty.dart';
-import 'package:github/models/user_model.dart';
+import 'package:github/models/user_model/user_model.dart';
 import 'package:github/utils/utils.dart';
 import 'package:go_router/go_router.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';

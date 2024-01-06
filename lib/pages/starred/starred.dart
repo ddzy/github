@@ -3,8 +3,8 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_emoji/flutter_emoji.dart';
 import 'package:github/components/custom_empty/custom_empty.dart';
-import 'package:github/models/repository_model.dart';
-import 'package:github/models/user_model.dart';
+import 'package:github/models/repository_model/repository_model.dart';
+import 'package:github/models/user_model/user_model.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:transparent_image/transparent_image.dart';
 
