@@ -42,13 +42,11 @@ class RepositoryOwnerModel {
     this.id = '',
     this.name = '',
     this.avatarUrl = '',
-    this.login = '',
   });
 
   final String id;
   final String name;
   final String avatarUrl;
-  final String login;
 
   factory RepositoryOwnerModel.fromJson(json) {
     return _$RepositoryOwnerModelFromJson(json);

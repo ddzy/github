@@ -195,7 +195,7 @@ class _StarredPageState extends State<StarredPage> {
                     Padding(
                       padding: const EdgeInsets.only(left: 6),
                       child: Text(
-                        data.owner.login,
+                        data.owner.name,
                         style: const TextStyle(
                           fontSize: 14,
                         ),
@@ -208,6 +208,7 @@ class _StarredPageState extends State<StarredPage> {
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
+                    color: Colors.black,
                   ),
                 ),
                 trailing: IconButton(
@@ -224,6 +225,40 @@ class _StarredPageState extends State<StarredPage> {
                   emojiParser.emojify(data.description),
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.fromLTRB(12, 12, 12, 12),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.star,
+                      color: Colors.yellow.shade700,
+                      size: 18,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 6),
+                      child: Text('${data.stargazerCount}'),
+                    ),
+                    Icon(
+                      Icons.circle,
+                      color: Color(
+                        int.tryParse(
+                              data.primaryLanguage.color.replaceAll(
+                                '#',
+                                '0xff',
+                              ),
+                            ) ??
+                            0xffcccccc,
+                      ),
+                      size: 14,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 6),
+                      child: Text(data.primaryLanguage.name),
+                    ),
+                  ],
                 ),
               ),
             ],

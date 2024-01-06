@@ -39,9 +39,8 @@ String genGql() {
                   }
                   ... on User {
                     id
-                    name
+                    name: login
                     avatarUrl
-                    login
                   }
                 }
                 stargazerCount

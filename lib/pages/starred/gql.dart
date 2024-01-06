@@ -35,9 +35,8 @@ String getInfo() {
               }
               ... on User {
                 id
-                name
+                name: login
                 avatarUrl
-                login
               }
             }
           }

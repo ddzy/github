@@ -38,7 +38,6 @@ RepositoryOwnerModel _$RepositoryOwnerModelFromJson(
       id: json['id'] as String? ?? '',
       name: json['name'] as String? ?? '',
       avatarUrl: json['avatarUrl'] as String? ?? '',
-      login: json['login'] as String? ?? '',
     );
 
 Map<String, dynamic> _$RepositoryOwnerModelToJson(
@@ -47,5 +46,4 @@ Map<String, dynamic> _$RepositoryOwnerModelToJson(
       'id': instance.id,
       'name': instance.name,
       'avatarUrl': instance.avatarUrl,
-      'login': instance.login,
     };
