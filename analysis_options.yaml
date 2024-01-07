@@ -2,5 +2,4 @@ include: package:flutter_lints/flutter.yaml
 
 linter:
   rules:
-    - lines_longer_than_80_chars
     - require_trailing_commas

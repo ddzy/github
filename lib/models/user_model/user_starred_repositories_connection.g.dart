@@ -14,6 +14,9 @@ UserStarredRepositoriesConnection _$UserStarredRepositoriesConnectionFromJson(
               ?.map(RepositoryModel.fromJson)
               .toList() ??
           const [],
+      pageInfo: json['pageInfo'] == null
+          ? const CommonConnectionPageInfoModel()
+          : CommonConnectionPageInfoModel.fromJson(json['pageInfo']),
     );
 
 Map<String, dynamic> _$UserStarredRepositoriesConnectionToJson(
@@ -21,4 +24,5 @@ Map<String, dynamic> _$UserStarredRepositoriesConnectionToJson(
     <String, dynamic>{
       'totalCount': instance.totalCount,
       'nodes': instance.nodes.map((e) => e.toJson()).toList(),
+      'pageInfo': instance.pageInfo.toJson(),
     };

@@ -2,7 +2,7 @@ part of 'starred.dart';
 
 String getInfo() {
   return """
-    query () {
+    query (\$after: String) {
       viewer {
         lists(last: 10) {
           totalCount
@@ -14,7 +14,7 @@ String getInfo() {
             }
           }
         }
-        starredRepositories(last: 10, orderBy: { direction: DESC, field: STARRED_AT }) {
+        starredRepositories(first: 10, orderBy: { direction: DESC, field: STARRED_AT }, after: \$after) {
           totalCount
           nodes {
             id

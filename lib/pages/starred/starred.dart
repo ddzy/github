@@ -22,10 +22,50 @@ class StarredPage extends StatefulWidget {
 class _StarredPageState extends State<StarredPage> {
   @override
   void initState() {
+    // 加载更多
+    _controller.addListener(() async {
+      var position = _controller.position;
+      if (position.extentAfter == 0) {
+        if (_isFetching) {
+          return;
+        }
+        _isFetching = true;
+        _isFirstLoad = false;
+        await _fetchMore!(
+          FetchMoreOptions(
+            updateQuery: (previousResultData, fetchMoreResultData) {
+              if (previousResultData == null) {
+                return fetchMoreResultData;
+              }
+              if (fetchMoreResultData == null) {
+                return fetchMoreResultData;
+              }
+              fetchMoreResultData["viewer"]?['starredRepositories']?["nodes"] = [
+                ...previousResultData["viewer"]?['starredRepositories']?["nodes"],
+                ...fetchMoreResultData["viewer"]?['starredRepositories']?["nodes"],
+              ];
+              return fetchMoreResultData;
+            },
+            variables: {
+              'after': _paginationCursor,
+            },
+          ),
+        );
+        _isFetching = false;
+      }
+    });
     super.initState();
   }
 
-  final EmojiParser emojiParser = EmojiParser();
+  final EmojiParser _emojiParser = EmojiParser();
+  final ScrollController _controller = ScrollController();
+  FetchMore? _fetchMore;
+  // 是否正在加载更多，避免重复触发
+  bool _isFetching = false;
+  String? _paginationCursor;
+
+  /// 是否首次加载数据
+  bool _isFirstLoad = true;
 
   @override
   Widget build(BuildContext context) {
@@ -38,13 +78,18 @@ class _StarredPageState extends State<StarredPage> {
         ],
       ),
       body: Query(
-        options: QueryOptions(document: gql(getInfo())),
+        options: QueryOptions(
+          document: gql(
+            getInfo(),
+          ),
+        ),
         builder: (
           QueryResult result, {
           VoidCallback? refetch,
           FetchMore? fetchMore,
         }) {
-          if (result.isLoading) {
+          // 只需要首次获取数据时展示全屏 loading
+          if (result.isLoading && _isFirstLoad) {
             return const Center(
               child: CircularProgressIndicator(),
             );
@@ -63,7 +108,6 @@ class _StarredPageState extends State<StarredPage> {
             );
           }
           var data = result.data?['viewer'];
-          inspect(data);
           if (data == null) {
             return const Center(
               child: Column(
@@ -73,9 +117,12 @@ class _StarredPageState extends State<StarredPage> {
             );
           }
           var parsedData = UserModel.fromJson(data);
+          _fetchMore = fetchMore;
+          _paginationCursor = parsedData.starredRepositories.pageInfo.endCursor;
 
           return ListView(
             scrollDirection: Axis.vertical,
+            controller: _controller,
             children: [
               _buildListsSection(parsedData),
               _buildReposSection(parsedData),
@@ -222,7 +269,7 @@ class _StarredPageState extends State<StarredPage> {
               Padding(
                 padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
                 child: Text(
-                  emojiParser.emojify(data.description),
+                  _emojiParser.emojify(data.description),
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
                 ),
