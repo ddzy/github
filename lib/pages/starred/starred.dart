@@ -207,6 +207,21 @@ class _StarredPageState extends State<StarredPage> {
             child: Column(
               children: [
                 ...parsedData.starredRepositories.nodes.map((e) => _buildRepo(e)),
+                Visibility(
+                  visible: _isFetching,
+                  child: Container(
+                    margin: const EdgeInsets.only(bottom: 12),
+                    child: const Center(
+                      child: SizedBox(
+                        width: 30,
+                        height: 30,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 3,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
