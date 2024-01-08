@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:github/pages/create_user_list/create_user_list.dart';
 import 'package:go_router/go_router.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -10,8 +11,7 @@ import './pages/explore/explore.dart' show ExplorePage;
 import './pages/notification/notification.dart' show NotificationPage;
 import './pages/starred/starred.dart' show StarredPage;
 import './constants/constants.dart' show $constants;
-import 'components/custom_bottom_navigation_bar/custom_bottom_navigation_bar.dart'
-    show CustomBottomNavigationBar;
+import 'components/custom_bottom_navigation_bar/custom_bottom_navigation_bar.dart' show CustomBottomNavigationBar;
 
 final GlobalKey<NavigatorState> $router = GlobalKey<NavigatorState>();
 
@@ -20,16 +20,21 @@ void main() async {
   var storage = await SharedPreferences.getInstance();
   var token = storage.getString($constants.storageToken.githubAccessToken);
   var httpLink = HttpLink('https://api.github.com/graphql');
-  var authLink = AuthLink(getToken: () async {
-    return 'Bearer $token';
-  });
+  var authLink = AuthLink(
+    getToken: () async {
+      return 'Bearer $token';
+    },
+  );
   var link = authLink.concat(httpLink);
   var client = ValueNotifier<GraphQLClient>(
-      GraphQLClient(link: link, cache: GraphQLCache()));
+    GraphQLClient(link: link, cache: GraphQLCache()),
+  );
 
-  runApp(MyApp(
-    client: client,
-  ));
+  runApp(
+    MyApp(
+      client: client,
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -46,8 +51,7 @@ class MyApp extends StatelessWidget {
             redirect: (context, state) async {
               // 每次 hotreload 时，根据 token 来判断跳到登录页或者停留在当前页
               final storage = await SharedPreferences.getInstance();
-              var token =
-                  storage.getString($constants.storageToken.githubAccessToken);
+              var token = storage.getString($constants.storageToken.githubAccessToken);
               return token == null ? '/login' : '/starred';
             },
           ),
@@ -70,10 +74,11 @@ class MyApp extends StatelessWidget {
         ],
         pageBuilder: (context, state, child) {
           return MaterialPage(
-              child: Scaffold(
-            body: child,
-            bottomNavigationBar: const CustomBottomNavigationBar(),
-          ));
+            child: Scaffold(
+              body: child,
+              bottomNavigationBar: const CustomBottomNavigationBar(),
+            ),
+          );
         },
       ),
       GoRoute(
@@ -83,6 +88,10 @@ class MyApp extends StatelessWidget {
       GoRoute(
         path: '/starred',
         builder: (context, state) => const StarredPage(),
+      ),
+      GoRoute(
+        path: '/create-user-list',
+        builder: (context, state) => const CreateUserListPage(),
       ),
     ],
     errorBuilder: (context, state) => const NotFound(),

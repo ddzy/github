@@ -5,6 +5,7 @@ import 'package:flutter_emoji/flutter_emoji.dart';
 import 'package:github/components/custom_empty/custom_empty.dart';
 import 'package:github/models/repository_model/repository_model.dart';
 import 'package:github/models/user_model/user_model.dart';
+import 'package:go_router/go_router.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:transparent_image/transparent_image.dart';
 
@@ -155,7 +156,9 @@ class _StarredPageState extends State<StarredPage> {
                 ),
                 const Spacer(),
                 TextButton.icon(
-                  onPressed: () {},
+                  onPressed: () {
+                    GoRouter.of(context).push('/create-user-list');
+                  },
                   icon: const Icon(Icons.add, color: Colors.blue),
                   label: const Text('新', style: TextStyle(color: Colors.blue)),
                 ),

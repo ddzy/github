@@ -3,9 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 class IUtilsInterface {
-  void showSnackBar(BuildContext context, Widget child,
-      {bool center = true,
-      Duration duration = const Duration(milliseconds: 2000)}) {
+  void showSnackBar(BuildContext context, Widget child, {bool center = true, Duration duration = const Duration(milliseconds: 2000)}) {
     var newChild = center
         ? SizedBox(
             child: Center(
@@ -14,10 +12,18 @@ class IUtilsInterface {
           )
         : child;
 
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: newChild,
-      duration: duration,
-    ));
+    ScaffoldMessenger.of(context)
+      ..removeCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: newChild,
+          duration: duration,
+        ),
+      );
+  }
+
+  void clearSnackBar(BuildContext context) {
+    ScaffoldMessenger.of(context).clearSnackBars();
   }
 
   /// 角度转弧度
