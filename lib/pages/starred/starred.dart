@@ -121,13 +121,21 @@ class _StarredPageState extends State<StarredPage> {
           _fetchMore = fetchMore;
           _paginationCursor = parsedData.starredRepositories.pageInfo.endCursor;
 
-          return ListView(
-            scrollDirection: Axis.vertical,
-            controller: _controller,
-            children: [
-              _buildListsSection(parsedData),
-              _buildReposSection(parsedData),
-            ],
+          return RefreshIndicator(
+            child: ListView(
+              scrollDirection: Axis.vertical,
+              controller: _controller,
+              children: [
+                _buildListsSection(parsedData),
+                _buildReposSection(parsedData),
+              ],
+            ),
+            onRefresh: () async {
+              if (refetch != null) {
+                _isFirstLoad = false;
+                refetch();
+              }
+            },
           );
         },
       ),

@@ -4,7 +4,7 @@ String getInfo() {
   return """
     query (\$after: String) {
       viewer {
-        lists(last: 10) {
+        lists(last: 100) {
           totalCount
           nodes {
             id
