@@ -49,3 +49,17 @@ String getInfo() {
     }
   """;
 }
+
+String deleteUserList() {
+  return """
+    mutation(\$listId: ID!) {
+      deleteUserList(
+        input: {
+          listId: \$listId,
+        }
+      ) {
+
+      }
+    }
+  """;
+}

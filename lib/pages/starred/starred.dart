@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_emoji/flutter_emoji.dart';
 import 'package:github/components/custom_empty/custom_empty.dart';
 import 'package:github/models/repository_model/repository_model.dart';
+import 'package:github/models/user_list_model/user_list_model.dart';
 import 'package:github/models/user_model/user_model.dart';
+import 'package:github/utils/utils.dart';
 import 'package:go_router/go_router.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:transparent_image/transparent_image.dart';
@@ -61,12 +63,16 @@ class _StarredPageState extends State<StarredPage> {
   final EmojiParser _emojiParser = EmojiParser();
   final ScrollController _controller = ScrollController();
   FetchMore? _fetchMore;
-  // 是否正在加载更多，避免重复触发
+
+  /// 是否正在加载更多，避免重复触发
   bool _isFetching = false;
   String? _paginationCursor;
 
   /// 是否首次加载数据
   bool _isFirstLoad = true;
+
+  VoidCallback? _refetch;
+  RunMutation? _deleteRunMutation;
 
   @override
   Widget build(BuildContext context) {
@@ -120,6 +126,7 @@ class _StarredPageState extends State<StarredPage> {
           var parsedData = UserModel.fromJson(data);
           _fetchMore = fetchMore;
           _paginationCursor = parsedData.starredRepositories.pageInfo.endCursor;
+          _refetch = refetch;
 
           return RefreshIndicator(
             child: ListView(
@@ -131,10 +138,8 @@ class _StarredPageState extends State<StarredPage> {
               ],
             ),
             onRefresh: () async {
-              if (refetch != null) {
-                _isFirstLoad = false;
-                refetch();
-              }
+              _isFirstLoad = false;
+              refetch!();
             },
           );
         },
@@ -176,19 +181,81 @@ class _StarredPageState extends State<StarredPage> {
           Column(
             children: [
               ...parsedData.lists.nodes.map(
-                (e) => Card(
-                  margin: const EdgeInsets.fromLTRB(12, 0, 12, 12),
-                  child: ListTile(
-                    title: Text(e.name),
-                    trailing: Text('${e.items.totalCount}'),
-                    onTap: () {},
-                  ),
-                ),
+                (e) => _buildList(e),
               ),
             ],
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildList(UserListModel data) {
+    return Dismissible(
+      key: ValueKey(data.id),
+      background: Container(
+        alignment: Alignment.center,
+        margin: const EdgeInsets.only(bottom: 12),
+        color: Colors.red,
+        child: Mutation(
+          options: MutationOptions(document: gql(deleteUserList())),
+          builder: (
+            RunMutation runMutation,
+            QueryResult? result,
+          ) {
+            _deleteRunMutation = runMutation;
+
+            if (result!.isLoading) {
+              return const CircularProgressIndicator(
+                color: Colors.white,
+              );
+            }
+            if (result.hasException) {
+              inspect(result.exception);
+              var message = result.exception?.graphqlErrors[0].message;
+              $utils.clearSnackBar(context);
+              $utils.showSnackBar(context, Text(message ?? ''));
+            }
+            // 删除成功
+            if (result.data != null) {
+              if (_refetch != null) {
+                _refetch!();
+              }
+              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                $utils.clearSnackBar(context);
+                $utils.showSnackBar(context, const Text('删除成功'));
+              });
+            }
+
+            return TextButton(
+              child: const Text(
+                '删除',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              onPressed: () {},
+            );
+          },
+        ),
+      ),
+      child: Card(
+        margin: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+        child: ListTile(
+          title: Text(data.name),
+          trailing: Text('${data.items.totalCount}'),
+          onTap: () {},
+        ),
+      ),
+      confirmDismiss: (direction) async {
+        if (_deleteRunMutation != null) {
+          _deleteRunMutation!({
+            'listId': data.id,
+          });
+        }
+        return false;
+      },
     );
   }
 
