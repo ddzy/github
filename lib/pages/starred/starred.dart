@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_emoji/flutter_emoji.dart';
 import 'package:github/components/custom_empty/custom_empty.dart';
+import 'package:github/main.dart';
 import 'package:github/models/repository_model/repository_model.dart';
 import 'package:github/models/user_list_model/user_list_model.dart';
 import 'package:github/models/user_model/user_model.dart';
@@ -55,6 +56,17 @@ class _StarredPageState extends State<StarredPage> {
           ),
         );
         _isFetching = false;
+      }
+    });
+
+    $routeObserver.addListener((route, previousRoute) {
+      var path = route.settings.name;
+      if (path == '/starred') {
+        // 路由变化，重新获取数据
+        _isFirstLoad = false;
+        if (_refetch != null) {
+          _refetch!();
+        }
       }
     });
     super.initState();

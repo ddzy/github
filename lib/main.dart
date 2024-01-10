@@ -13,7 +13,42 @@ import './pages/starred/starred.dart' show StarredPage;
 import './constants/constants.dart' show $constants;
 import 'components/custom_bottom_navigation_bar/custom_bottom_navigation_bar.dart' show CustomBottomNavigationBar;
 
+typedef CustomRouteObserverFunc = void Function(Route route, Route? previousRoute);
+
+class CustomRouteObserver extends NavigatorObserver {
+  final List<CustomRouteObserverFunc> _listeners = [];
+  Route? _route;
+  Route? _previousRoute;
+
+  void _flushListener() {
+    for (var element in _listeners) {
+      element(_route!, _previousRoute);
+    }
+  }
+
+  @override
+  void didPop(Route route, Route? previousRoute) {
+    _route = previousRoute;
+    _previousRoute = route;
+    _flushListener();
+    super.didPop(route, previousRoute);
+  }
+
+  @override
+  void didPush(Route route, Route? previousRoute) {
+    _route = route;
+    _previousRoute = previousRoute;
+    _flushListener();
+    super.didPush(route, previousRoute);
+  }
+
+  void addListener(CustomRouteObserverFunc listener) {
+    _listeners.add(listener);
+  }
+}
+
 final GlobalKey<NavigatorState> $router = GlobalKey<NavigatorState>();
+final CustomRouteObserver $routeObserver = CustomRouteObserver();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,6 +77,7 @@ class MyApp extends StatelessWidget {
 
   final ValueNotifier<GraphQLClient> client;
   final GoRouter _router = GoRouter(
+    observers: [$routeObserver],
     navigatorKey: $router,
     routes: [
       ShellRoute(
