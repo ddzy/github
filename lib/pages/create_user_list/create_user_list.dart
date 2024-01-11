@@ -40,7 +40,6 @@ class _CreateUserListPageState extends State<CreateUserListPage> {
                       height: 20,
                       child: Center(
                         child: CircularProgressIndicator(
-                          color: Colors.white,
                           strokeWidth: 3,
                         ),
                       ),
@@ -73,7 +72,6 @@ class _CreateUserListPageState extends State<CreateUserListPage> {
                 },
                 child: const Text(
                   "创建",
-                  style: TextStyle(color: Colors.white),
                 ),
               );
             },

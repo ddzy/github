@@ -63,9 +63,11 @@ class _StarredPageState extends State<StarredPage> {
       var path = route.settings.name;
       if (path == '/starred') {
         // 路由变化，重新获取数据
-        _isFirstLoad = false;
-        if (_refetch != null) {
-          _refetch!();
+        if (!_isFirstLoad) {
+          _isFirstLoad = false;
+          if (_refetch != null) {
+            _refetch!();
+          }
         }
       }
     });
@@ -101,6 +103,7 @@ class _StarredPageState extends State<StarredPage> {
           document: gql(
             getInfo(),
           ),
+          fetchPolicy: FetchPolicy.noCache,
         ),
         builder: (
           QueryResult result, {
