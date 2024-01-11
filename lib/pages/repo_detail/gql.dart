@@ -29,3 +29,28 @@ String getInfo() {
     }
   """;
 }
+
+String postStar() {
+  return """ 
+    mutation(\$id: ID!) {
+      addStar(
+        input: {
+          starrableId: \$id
+        }
+      ) {
+      }
+    }
+  """;
+}
+
+String postUnstar() {
+  return """ 
+    mutation(\$id: ID!) {
+      removeStar(
+        input: {
+          starrableId: \$id
+        }
+      ) {}
+    }
+  """;
+}

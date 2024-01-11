@@ -25,12 +25,58 @@ class RepoDetailPage extends StatefulWidget {
 class _RepoDetailPageState extends State<RepoDetailPage> {
   String _title = '';
   Widget _widget = Container();
+  bool _isStarLoading = false;
   late RepositoryModel _data;
 
   @override
   void initState() {
     super.initState();
     fetchInfo(isFirstFetch: true);
+  }
+
+  void _toggleStar(bool isStar) async {
+    void next() async {
+      _isStarLoading = true;
+      await $client.value.mutate(
+        MutationOptions(
+          document: gql(isStar ? postStar() : postUnstar()),
+          variables: {
+            'id': _data.id,
+          },
+        ),
+      );
+      _isStarLoading = false;
+      fetchInfo();
+    }
+
+    if (isStar) {
+      next();
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('取消标星 ${_data.name}'),
+            content: const Text('取消此仓库的标星后，也会将其从列表中删除'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('取消'),
+              ),
+              TextButton(
+                onPressed: () {
+                  next();
+                  Navigator.pop(context);
+                },
+                child: const Text('确认'),
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 
   void fetchInfo({isFirstFetch = false}) async {
@@ -46,6 +92,7 @@ class _RepoDetailPageState extends State<RepoDetailPage> {
         variables: {
           'id': widget.id,
         },
+        fetchPolicy: FetchPolicy.noCache,
       ),
     );
     if (result.hasException) {
@@ -86,7 +133,9 @@ class _RepoDetailPageState extends State<RepoDetailPage> {
 
   Widget _buildPageContent() {
     return RefreshIndicator(
-      onRefresh: () async {},
+      onRefresh: () async {
+        fetchInfo();
+      },
       child: ListView(
         children: [
           _buildProfile(),
@@ -192,7 +241,9 @@ class _RepoDetailPageState extends State<RepoDetailPage> {
                           padding: const EdgeInsets.only(right: 12),
                           child: IconButton.filledTonal(
                             onPressed: () {
-                              GoRouter.of(context).go('/my');
+                              if (!_isStarLoading) {
+                                _toggleStar(false);
+                              }
                             },
                             icon: const Icon(
                               Icons.star,
@@ -204,9 +255,13 @@ class _RepoDetailPageState extends State<RepoDetailPage> {
                         child: Padding(
                           padding: const EdgeInsets.only(right: 12),
                           child: ElevatedButton.icon(
-                            onPressed: () {},
-                            icon: const Icon(Icons.add),
-                            label: const Text('添加到列表'),
+                            onPressed: () {
+                              if (!_data.viewerHasStarred && !_isStarLoading) {
+                                _toggleStar(true);
+                              }
+                            },
+                            icon: _data.viewerHasStarred ? const Icon(Icons.add) : const Icon(Icons.star_border),
+                            label: _data.viewerHasStarred ? const Text('添加到列表') : const Text('星标'),
                           ),
                         ),
                       ),
