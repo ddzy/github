@@ -13,6 +13,9 @@ class RepositoryModel {
     this.description = '',
     this.descriptionHTML = '',
     this.stargazerCount = 0,
+    this.forkCount = 0,
+    this.homepageUrl = '',
+    this.viewerHasStarred = false,
     this.owner = const RepositoryOwnerInterface(
     ),
     this.primaryLanguage = const LanguageModel(),
@@ -23,6 +26,9 @@ class RepositoryModel {
   final String description;
   final String descriptionHTML;
   final int stargazerCount;
+  final int forkCount;
+  final String homepageUrl;
+  final bool viewerHasStarred;
   final RepositoryOwnerInterface owner;
   final LanguageModel primaryLanguage;
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:github/pages/create_user_list/create_user_list.dart';
+import 'package:github/pages/repo_detail/repo_detail.dart';
 import 'package:go_router/go_router.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -49,6 +50,7 @@ class CustomRouteObserver extends NavigatorObserver {
 
 final GlobalKey<NavigatorState> $router = GlobalKey<NavigatorState>();
 final CustomRouteObserver $routeObserver = CustomRouteObserver();
+late final ValueNotifier<GraphQLClient> $client;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -61,7 +63,7 @@ void main() async {
     },
   );
   var link = authLink.concat(httpLink);
-  var client = ValueNotifier<GraphQLClient>(
+  var client = $client = ValueNotifier<GraphQLClient>(
     GraphQLClient(link: link, cache: GraphQLCache()),
   );
 
@@ -129,6 +131,15 @@ class MyApp extends StatelessWidget {
         path: '/create-user-list',
         builder: (context, state) => const CreateUserListPage(),
       ),
+      GoRoute(
+        path: '/repo-detail/:id',
+        builder: (context, state) {
+          var params = state.pathParameters;
+          return RepoDetailPage(
+            id: params['id'] ?? '',
+          );
+        },
+      ),
     ],
     errorBuilder: (context, state) => const NotFound(),
   );
@@ -140,6 +151,10 @@ class MyApp extends StatelessWidget {
       child: MaterialApp.router(
         title: 'Flutter Demo',
         routerConfig: _router,
+        theme: ThemeData(
+          useMaterial3: true,
+          primaryColor: Colors.blue,
+        ),
       ),
     );
   }

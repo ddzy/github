@@ -415,7 +415,9 @@ class _StarredPageState extends State<StarredPage> {
               ),
             ],
           ),
-          onTap: () {},
+          onTap: () {
+            GoRouter.of(context).push('/repo-detail/${data.id}');
+          },
         ),
       ),
     );
