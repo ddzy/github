@@ -1,6 +1,4 @@
 import 'dart:developer';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:github/components/custom_empty/custom_empty.dart';
 import 'package:github/components/custom_link/custom_link.dart';
@@ -10,7 +8,6 @@ import 'package:github/utils/utils.dart';
 import 'package:go_router/go_router.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:transparent_image/transparent_image.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 part 'gql.dart';
 
@@ -194,7 +191,9 @@ class _RepoDetailPageState extends State<RepoDetailPage> {
                         child: Padding(
                           padding: const EdgeInsets.only(right: 12),
                           child: IconButton.filledTonal(
-                            onPressed: () {},
+                            onPressed: () {
+                              GoRouter.of(context).go('/my');
+                            },
                             icon: const Icon(
                               Icons.star,
                             ),

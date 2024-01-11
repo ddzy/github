@@ -298,7 +298,7 @@ class _MyPageState extends State<MyPage> {
                           ],
                         ),
                         Container(
-                          height: 150,
+                          height: 160,
                           margin: const EdgeInsets.only(top: 12),
                           child: Material(
                             color: Colors.white,
