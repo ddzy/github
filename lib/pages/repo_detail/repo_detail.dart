@@ -139,6 +139,7 @@ class _RepoDetailPageState extends State<RepoDetailPage> {
         children: [
           _buildProfile(),
           _buildAttachment(),
+          _buildBranch(),
         ],
       ),
     );
@@ -247,8 +248,9 @@ class _RepoDetailPageState extends State<RepoDetailPage> {
                                 _toggleStar(false);
                               }
                             },
-                            icon: const Icon(
+                            icon: Icon(
                               Icons.star,
+                              color: _data.viewerHasStarred ? Colors.black : Colors.grey.shade600,
                             ),
                           ),
                         ),
@@ -272,7 +274,10 @@ class _RepoDetailPageState extends State<RepoDetailPage> {
                 ),
                 IconButton.filledTonal(
                   onPressed: () {},
-                  icon: const Icon(Icons.notifications_none),
+                  icon: Icon(
+                    Icons.notifications_none,
+                    color: Colors.grey.shade600,
+                  ),
                 ),
               ],
             ),
@@ -286,12 +291,11 @@ class _RepoDetailPageState extends State<RepoDetailPage> {
     return Container(
       decoration: BoxDecoration(
         border: Border(top: BorderSide(color: Colors.grey.shade200)),
-        color: Colors.white,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _buildAttachmentItem(Icons.event, Colors.green, '议题', _data.issues.totalCount),
+          _buildAttachmentItem(Icons.adjust, Colors.green, '议题', _data.issues.totalCount),
           _buildAttachmentItem(Icons.hub_outlined, Colors.blue, '拉取请求', _data.pullRequests.totalCount),
           _buildAttachmentItem(Icons.forum_outlined, Colors.purple, '讨论', _data.pullRequests.totalCount),
         ],
@@ -328,6 +332,69 @@ class _RepoDetailPageState extends State<RepoDetailPage> {
           trailing: Text('$count'),
           onTap: () {},
         ),
+      ),
+    );
+  }
+
+  Widget _buildBranch() {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(
+          top: BorderSide(color: Colors.grey.shade200),
+        ),
+      ),
+      child: Column(
+        children: [
+          ListTile(
+            title: const Row(
+              children: [
+                Icon(Icons.route_outlined),
+                Padding(
+                  padding: EdgeInsets.only(left: 6),
+                  child: Text('master'),
+                ),
+              ],
+            ),
+            trailing: TextButton(
+              onPressed: () {},
+              child: const Text('更改分支'),
+            ),
+          ),
+          Material(
+            child: InkWell(
+              child: ListTile(
+                leading: Container(
+                  width: 30,
+                  height: 30,
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(6)),
+                    color: Colors.grey.shade200,
+                  ),
+                  child: const Icon(Icons.code),
+                ),
+                title: const Text('代码'),
+                onTap: () {},
+              ),
+            ),
+          ),
+          Material(
+            child: InkWell(
+              child: ListTile(
+                leading: Container(
+                  width: 30,
+                  height: 30,
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(6)),
+                    color: Colors.grey.shade200,
+                  ),
+                  child: const Icon(Icons.commit),
+                ),
+                title: const Text('提交'),
+                onTap: () {},
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
