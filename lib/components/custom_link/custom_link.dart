@@ -13,7 +13,7 @@ class CustomLink extends StatelessWidget {
       child: InkWell(
         child: Text(
           url,
-          style: const TextStyle(color: Colors.blue, decoration: TextDecoration.underline),
+          style: const TextStyle(color: Colors.blue, decoration: TextDecoration.underline, overflow: TextOverflow.ellipsis),
         ),
         onTap: () => launchUrl(Uri.parse(url)),
       ),

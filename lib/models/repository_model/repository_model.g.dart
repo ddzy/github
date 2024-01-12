@@ -22,6 +22,15 @@ RepositoryModel _$RepositoryModelFromJson(Map<String, dynamic> json) =>
       primaryLanguage: json['primaryLanguage'] == null
           ? const LanguageModel()
           : LanguageModel.fromJson(json['primaryLanguage']),
+      issues: json['issues'] == null
+          ? const RepositoryIssuesConnection()
+          : RepositoryIssuesConnection.fromJson(json['issues']),
+      pullRequests: json['pullRequests'] == null
+          ? const RepositoryPrsConnection()
+          : RepositoryPrsConnection.fromJson(json['pullRequests']),
+      discussions: json['discussions'] == null
+          ? const RepositoryDiscussionsConnection()
+          : RepositoryDiscussionsConnection.fromJson(json['discussions']),
     );
 
 Map<String, dynamic> _$RepositoryModelToJson(RepositoryModel instance) =>
@@ -36,4 +45,7 @@ Map<String, dynamic> _$RepositoryModelToJson(RepositoryModel instance) =>
       'viewerHasStarred': instance.viewerHasStarred,
       'owner': instance.owner.toJson(),
       'primaryLanguage': instance.primaryLanguage.toJson(),
+      'issues': instance.issues.toJson(),
+      'pullRequests': instance.pullRequests.toJson(),
+      'discussions': instance.discussions.toJson(),
     };

@@ -5,7 +5,6 @@ import 'package:github/components/custom_link/custom_link.dart';
 import 'package:github/main.dart';
 import 'package:github/models/repository_model/repository_model.dart';
 import 'package:github/utils/utils.dart';
-import 'package:go_router/go_router.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:transparent_image/transparent_image.dart';
 
@@ -139,6 +138,7 @@ class _RepoDetailPageState extends State<RepoDetailPage> {
       child: ListView(
         children: [
           _buildProfile(),
+          _buildAttachment(),
         ],
       ),
     );
@@ -187,9 +187,11 @@ class _RepoDetailPageState extends State<RepoDetailPage> {
                     angle: $utils.angleToRadian(-45),
                     child: const Icon(Icons.link),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 6),
-                    child: CustomLink(url: _data.homepageUrl),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 6),
+                      child: CustomLink(url: _data.homepageUrl),
+                    ),
                   ),
                 ],
               ),
@@ -276,6 +278,56 @@ class _RepoDetailPageState extends State<RepoDetailPage> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildAttachment() {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(top: BorderSide(color: Colors.grey.shade200)),
+        color: Colors.white,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _buildAttachmentItem(Icons.event, Colors.green, '议题', _data.issues.totalCount),
+          _buildAttachmentItem(Icons.hub_outlined, Colors.blue, '拉取请求', _data.pullRequests.totalCount),
+          _buildAttachmentItem(Icons.forum_outlined, Colors.purple, '讨论', _data.pullRequests.totalCount),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAttachmentItem(
+    IconData iconData,
+    Color leadingBgColor,
+    String title,
+    int count,
+  ) {
+    return Material(
+      child: InkWell(
+        child: ListTile(
+          leading: Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.all(
+                Radius.circular(6),
+              ),
+              color: leadingBgColor,
+            ),
+            child: Center(
+              child: Icon(
+                iconData,
+                color: Colors.white,
+              ),
+            ),
+          ),
+          title: Text(title),
+          trailing: Text('$count'),
+          onTap: () {},
+        ),
       ),
     );
   }

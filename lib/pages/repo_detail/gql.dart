@@ -24,6 +24,15 @@ String getInfo() {
           forkCount
           stargazerCount
           viewerHasStarred
+          issues {
+            totalCount
+          }
+          pullRequests {
+            totalCount
+          }
+          discussions {
+            totalCount
+          }
         }
       }
     }
