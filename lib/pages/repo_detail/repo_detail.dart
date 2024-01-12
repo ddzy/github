@@ -140,6 +140,7 @@ class _RepoDetailPageState extends State<RepoDetailPage> {
           _buildProfile(),
           _buildAttachment(),
           _buildBranch(),
+          _buildReadme(),
         ],
       ),
     );
@@ -313,8 +314,8 @@ class _RepoDetailPageState extends State<RepoDetailPage> {
       child: InkWell(
         child: ListTile(
           leading: Container(
-            width: 40,
-            height: 40,
+            width: 30,
+            height: 30,
             decoration: BoxDecoration(
               borderRadius: const BorderRadius.all(
                 Radius.circular(6),
@@ -325,6 +326,7 @@ class _RepoDetailPageState extends State<RepoDetailPage> {
               child: Icon(
                 iconData,
                 color: Colors.white,
+                size: 16,
               ),
             ),
           ),
@@ -346,12 +348,12 @@ class _RepoDetailPageState extends State<RepoDetailPage> {
       child: Column(
         children: [
           ListTile(
-            title: const Row(
+            title: Row(
               children: [
-                Icon(Icons.route_outlined),
+                const Icon(Icons.route_outlined),
                 Padding(
-                  padding: EdgeInsets.only(left: 6),
-                  child: Text('master'),
+                  padding: const EdgeInsets.only(left: 6),
+                  child: Text(_data.defaultBranchRef.name),
                 ),
               ],
             ),
@@ -370,7 +372,10 @@ class _RepoDetailPageState extends State<RepoDetailPage> {
                     borderRadius: const BorderRadius.all(Radius.circular(6)),
                     color: Colors.grey.shade200,
                   ),
-                  child: const Icon(Icons.code),
+                  child: const Icon(
+                    Icons.code,
+                    size: 16,
+                  ),
                 ),
                 title: const Text('代码'),
                 onTap: () {},
@@ -387,11 +392,39 @@ class _RepoDetailPageState extends State<RepoDetailPage> {
                     borderRadius: const BorderRadius.all(Radius.circular(6)),
                     color: Colors.grey.shade200,
                   ),
-                  child: const Icon(Icons.commit),
+                  child: const Icon(
+                    Icons.commit,
+                    size: 16,
+                  ),
                 ),
                 title: const Text('提交'),
                 onTap: () {},
               ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildReadme() {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(
+          top: BorderSide(color: Colors.grey.shade200),
+        ),
+      ),
+      child: const Column(
+        children: [
+          ListTile(
+            title: Row(
+              children: [
+                Icon(Icons.info_outline),
+                Padding(
+                  padding: EdgeInsets.only(left: 12),
+                  child: Text('README.md'),
+                ),
+              ],
             ),
           ),
         ],

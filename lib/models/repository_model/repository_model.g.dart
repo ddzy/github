@@ -22,6 +22,9 @@ RepositoryModel _$RepositoryModelFromJson(Map<String, dynamic> json) =>
       primaryLanguage: json['primaryLanguage'] == null
           ? const LanguageModel()
           : LanguageModel.fromJson(json['primaryLanguage']),
+      defaultBranchRef: json['defaultBranchRef'] == null
+          ? const RefModel()
+          : RefModel.fromJson(json['defaultBranchRef']),
       issues: json['issues'] == null
           ? const RepositoryIssuesConnection()
           : RepositoryIssuesConnection.fromJson(json['issues']),
@@ -45,6 +48,7 @@ Map<String, dynamic> _$RepositoryModelToJson(RepositoryModel instance) =>
       'viewerHasStarred': instance.viewerHasStarred,
       'owner': instance.owner.toJson(),
       'primaryLanguage': instance.primaryLanguage.toJson(),
+      'defaultBranchRef': instance.defaultBranchRef.toJson(),
       'issues': instance.issues.toJson(),
       'pullRequests': instance.pullRequests.toJson(),
       'discussions': instance.discussions.toJson(),

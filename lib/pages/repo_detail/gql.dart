@@ -33,6 +33,11 @@ String getInfo() {
           discussions {
             totalCount
           }
+          defaultBranchRef {
+            id
+            name
+            prefix
+          }
         }
       }
     }

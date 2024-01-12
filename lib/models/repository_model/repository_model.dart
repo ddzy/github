@@ -1,4 +1,5 @@
 import 'package:github/models/language_model/language_model.dart';
+import 'package:github/models/ref_model/ref_model.dart';
 import 'package:github/models/repository_model/repository_discussions_connection.dart';
 import 'package:github/models/repository_model/repository_issues_connection.dart';
 import 'package:github/models/repository_model/repository_owner_interface.dart';
@@ -22,6 +23,7 @@ class RepositoryModel {
     this.owner = const RepositoryOwnerInterface(
     ),
     this.primaryLanguage = const LanguageModel(),
+    this.defaultBranchRef = const RefModel(),
     this.issues = const RepositoryIssuesConnection(),
     this.pullRequests = const RepositoryPrsConnection(),
     this.discussions = const RepositoryDiscussionsConnection(),
@@ -37,6 +39,7 @@ class RepositoryModel {
   final bool viewerHasStarred;
   final RepositoryOwnerInterface owner;
   final LanguageModel primaryLanguage;
+  final RefModel defaultBranchRef;
   final RepositoryIssuesConnection issues;
   final RepositoryPrsConnection pullRequests;
   final RepositoryDiscussionsConnection discussions;
