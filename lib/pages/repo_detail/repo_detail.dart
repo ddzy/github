@@ -1,12 +1,16 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:github/components/custom_empty/custom_empty.dart';
 import 'package:github/components/custom_link/custom_link.dart';
+import 'package:github/interfaces/git_object_interface.dart';
 import 'package:github/main.dart';
 import 'package:github/models/repository_model/repository_model.dart';
 import 'package:github/utils/utils.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:transparent_image/transparent_image.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:markdown/markdown.dart' as md;
 
 part 'gql.dart';
 
@@ -26,6 +30,7 @@ class _RepoDetailPageState extends State<RepoDetailPage> {
   Widget _widget = Container();
   bool _isStarLoading = false;
   late RepositoryModel _data;
+  late GitObjectInterface _readmeData;
 
   @override
   void initState() {
@@ -311,6 +316,7 @@ class _RepoDetailPageState extends State<RepoDetailPage> {
     int count,
   ) {
     return Material(
+      color: Colors.white,
       child: InkWell(
         child: ListTile(
           leading: Container(
@@ -363,6 +369,7 @@ class _RepoDetailPageState extends State<RepoDetailPage> {
             ),
           ),
           Material(
+            color: Colors.white,
             child: InkWell(
               child: ListTile(
                 leading: Container(
@@ -383,6 +390,7 @@ class _RepoDetailPageState extends State<RepoDetailPage> {
             ),
           ),
           Material(
+            color: Colors.white,
             child: InkWell(
               child: ListTile(
                 leading: Container(
@@ -414,9 +422,9 @@ class _RepoDetailPageState extends State<RepoDetailPage> {
           top: BorderSide(color: Colors.grey.shade200),
         ),
       ),
-      child: const Column(
+      child: Column(
         children: [
-          ListTile(
+          const ListTile(
             title: Row(
               children: [
                 Icon(Icons.info_outline),
@@ -425,6 +433,33 @@ class _RepoDetailPageState extends State<RepoDetailPage> {
                   child: Text('README.md'),
                 ),
               ],
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
+            color: Colors.white,
+            child: MarkdownBody(
+              data: _data.object.text,
+              extensionSet: md.ExtensionSet(
+                md.ExtensionSet.gitHubFlavored.blockSyntaxes,
+                <md.InlineSyntax>[md.EmojiSyntax(), ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes],
+              ),
+              imageBuilder: (uri, title, alt) {
+                // 如果图片不以[png, jpg, jpeg, svg]结尾，那么就添加[png]后缀
+                var url = uri.toString();
+                var reg = RegExp(r"(\.png)|(\.jpg)|(\.jpeg)|(\.svg)$");
+                if (!reg.hasMatch(url)) {
+                  url = '$url.png';
+                }
+
+                return FadeInImage(
+                  placeholder: MemoryImage(kTransparentImage),
+                  image: NetworkImage(url),
+                );
+              },
+              onTapLink: (text, href, title) {
+                launchUrl(Uri.parse(href ?? ''));
+              },
             ),
           ),
         ],

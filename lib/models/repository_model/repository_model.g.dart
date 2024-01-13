@@ -19,6 +19,9 @@ RepositoryModel _$RepositoryModelFromJson(Map<String, dynamic> json) =>
       owner: json['owner'] == null
           ? const RepositoryOwnerInterface()
           : RepositoryOwnerInterface.fromJson(json['owner']),
+      object: json['object'] == null
+          ? const GitObjectInterface()
+          : GitObjectInterface.fromJson(json['object']),
       primaryLanguage: json['primaryLanguage'] == null
           ? const LanguageModel()
           : LanguageModel.fromJson(json['primaryLanguage']),
@@ -47,6 +50,7 @@ Map<String, dynamic> _$RepositoryModelToJson(RepositoryModel instance) =>
       'homepageUrl': instance.homepageUrl,
       'viewerHasStarred': instance.viewerHasStarred,
       'owner': instance.owner.toJson(),
+      'object': instance.object.toJson(),
       'primaryLanguage': instance.primaryLanguage.toJson(),
       'defaultBranchRef': instance.defaultBranchRef.toJson(),
       'issues': instance.issues.toJson(),

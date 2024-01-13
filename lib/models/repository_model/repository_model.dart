@@ -1,3 +1,4 @@
+import 'package:github/interfaces/git_object_interface.dart';
 import 'package:github/models/language_model/language_model.dart';
 import 'package:github/models/ref_model/ref_model.dart';
 import 'package:github/models/repository_model/repository_discussions_connection.dart';
@@ -22,6 +23,7 @@ class RepositoryModel {
     this.viewerHasStarred = false,
     this.owner = const RepositoryOwnerInterface(
     ),
+    this.object = const GitObjectInterface(),
     this.primaryLanguage = const LanguageModel(),
     this.defaultBranchRef = const RefModel(),
     this.issues = const RepositoryIssuesConnection(),
@@ -38,6 +40,7 @@ class RepositoryModel {
   final String homepageUrl;
   final bool viewerHasStarred;
   final RepositoryOwnerInterface owner;
+  final GitObjectInterface object;
   final LanguageModel primaryLanguage;
   final RefModel defaultBranchRef;
   final RepositoryIssuesConnection issues;

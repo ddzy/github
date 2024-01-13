@@ -38,6 +38,14 @@ String getInfo() {
             name
             prefix
           }
+          object(expression: "HEAD:README.md") {
+            id
+            oid
+            ... on Blob {
+              text
+              byteSize
+            }
+          }
         }
       }
     }
@@ -65,6 +73,25 @@ String postUnstar() {
           starrableId: \$id
         }
       ) {}
+    }
+  """;
+}
+
+String getReadme() {
+  return """ 
+    query(\$id: ID!) {
+      node(id: \$id) {
+        ... on Repository {
+          object(expression: "HEAD:README.md") {
+            id
+            oid
+            ... on Blob {
+              text
+              byteSize
+            }
+          }
+        }
+      }
     }
   """;
 }
