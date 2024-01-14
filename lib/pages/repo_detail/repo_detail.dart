@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:github/components/custom_empty/custom_empty.dart';
 import 'package:github/components/custom_link/custom_link.dart';
-import 'package:github/interfaces/git_object_interface.dart';
 import 'package:github/main.dart';
 import 'package:github/models/repository_model/repository_model.dart';
 import 'package:github/utils/utils.dart';
@@ -30,7 +29,6 @@ class _RepoDetailPageState extends State<RepoDetailPage> {
   Widget _widget = Container();
   bool _isStarLoading = false;
   late RepositoryModel _data;
-  late GitObjectInterface _readmeData;
 
   @override
   void initState() {
