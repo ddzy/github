@@ -10,6 +10,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:markdown/markdown.dart' as md;
+import 'package:visibility_detector/visibility_detector.dart';
 
 part 'gql.dart';
 
@@ -24,15 +25,19 @@ class RepoDetailPage extends StatefulWidget {
   }
 }
 
-class _RepoDetailPageState extends State<RepoDetailPage> {
-  String _title = '';
+class _RepoDetailPageState extends State<RepoDetailPage> with TickerProviderStateMixin {
   Widget _widget = Container();
+  String _title = '';
   bool _isStarLoading = false;
   late RepositoryModel _data;
+  late AnimationController _controller;
+  late Animation<Offset> _animation;
 
   @override
   void initState() {
     super.initState();
+    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 150));
+    _animation = Tween<Offset>(begin: const Offset(0, 1.5), end: const Offset(0, 0)).chain(CurveTween(curve: Curves.ease)).animate(_controller);
     fetchInfo(isFirstFetch: true);
   }
 
@@ -170,12 +175,22 @@ class _RepoDetailPageState extends State<RepoDetailPage> {
           ),
           Padding(
             padding: const EdgeInsets.only(top: 12),
-            child: Text(
-              _data.name,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
+            child: VisibilityDetector(
+              key: UniqueKey(),
+              child: Text(
+                _data.name,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
               ),
+              onVisibilityChanged: (VisibilityInfo info) {
+                if (info.visibleFraction < 1) {
+                  _controller.forward();
+                } else {
+                  _controller.reverse();
+                }
+              },
             ),
           ),
           Padding(
@@ -476,7 +491,10 @@ class _RepoDetailPageState extends State<RepoDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_title),
+        title: SlideTransition(
+          position: _animation,
+          child: Text(_title),
+        ),
       ),
       body: _widget,
     );
