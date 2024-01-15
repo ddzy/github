@@ -1,9 +1,12 @@
 import 'dart:developer';
+import 'dart:ui';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:github/components/custom_empty/custom_empty.dart';
 import 'package:github/components/custom_link/custom_link.dart';
 import 'package:github/main.dart';
+import 'package:github/models/ref_model/ref_model.dart';
 import 'package:github/models/repository_model/repository_model.dart';
 import 'package:github/utils/utils.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -29,7 +32,9 @@ class _RepoDetailPageState extends State<RepoDetailPage> with TickerProviderStat
   Widget _widget = Container();
   String _title = '';
   bool _isStarLoading = false;
+  String _selectedBranch = '';
   late RepositoryModel _data;
+  late List<RefModel> _branches;
   late AnimationController _controller;
   late Animation<Offset> _animation;
 
@@ -98,6 +103,7 @@ class _RepoDetailPageState extends State<RepoDetailPage> with TickerProviderStat
         document: gql(getInfo()),
         variables: {
           'id': widget.id,
+          'expression': "${_selectedBranch.isEmpty ? 'HEAD' : _selectedBranch}:README.md",
         },
         fetchPolicy: FetchPolicy.noCache,
       ),
@@ -365,19 +371,33 @@ class _RepoDetailPageState extends State<RepoDetailPage> with TickerProviderStat
         ),
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           ListTile(
             title: Row(
               children: [
                 const Icon(Icons.route_outlined),
-                Padding(
-                  padding: const EdgeInsets.only(left: 6),
-                  child: Text(_data.defaultBranchRef.name),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 6),
+                    child: Text(
+                      _selectedBranch.isEmpty ? _data.defaultBranchRef.name : _selectedBranch,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
                 ),
               ],
             ),
             trailing: TextButton(
-              onPressed: () {},
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  builder: (context) {
+                    return _buildBranchSheet(context);
+                  },
+                );
+              },
               child: const Text('更改分支'),
             ),
           ),
@@ -420,6 +440,124 @@ class _RepoDetailPageState extends State<RepoDetailPage> with TickerProviderStat
                 ),
                 title: const Text('提交'),
                 onTap: () {},
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBranchSheet(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.fromLTRB(0, MediaQueryData.fromView(View.of(context)).padding.top, 0, 0),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              IconButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                icon: const Icon(Icons.close),
+              ),
+              const Padding(
+                padding: EdgeInsets.only(left: 12),
+                child: Text(
+                  '选择分支',
+                  style: TextStyle(fontSize: 18),
+                ),
+              ),
+            ],
+          ),
+          const Padding(
+            padding: EdgeInsets.fromLTRB(12, 12, 12, 12),
+            child: TextField(
+              decoration: InputDecoration(
+                icon: Icon(Icons.search),
+                hintText: '搜索分支',
+              ),
+            ),
+          ),
+          Expanded(
+            child: SizedBox(
+              child: Query(
+                options: QueryOptions(
+                  document: gql(getBranches()),
+                  variables: {
+                    'id': _data.id,
+                  },
+                  fetchPolicy: FetchPolicy.noCache,
+                ),
+                builder: (
+                  QueryResult result, {
+                  Refetch? refetch,
+                  FetchMore? fetchMore,
+                }) {
+                  if (result.isLoading) {
+                    return Padding(
+                      padding: const EdgeInsets.only(top: 40),
+                      child: _buildPageLoading(),
+                    );
+                  }
+                  if (result.hasException) {
+                    inspect(result.exception);
+                    return _buildPageException();
+                  }
+                  var branchData = RepositoryModel.fromJson(result.data?['node']);
+                  _branches = branchData.refs.nodes;
+                  if (_selectedBranch.isEmpty) {
+                    _selectedBranch = branchData.defaultBranchRef.name;
+                  }
+
+                  return ListView.builder(
+                    itemCount: _branches.length,
+                    itemBuilder: (context, index) {
+                      var branch = _branches[index];
+                      return Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          child: RadioListTile(
+                            title: Wrap(
+                              children: [
+                                Text(
+                                  branch.name,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 3,
+                                ),
+                                Visibility(
+                                  visible: branchData.defaultBranchRef.id == branch.id,
+                                  child: Container(
+                                    margin: const EdgeInsets.only(left: 12),
+                                    decoration: BoxDecoration(
+                                      borderRadius: const BorderRadius.all(Radius.circular(100)),
+                                      border: Border.all(color: Colors.grey),
+                                    ),
+                                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                                    child: const Text(
+                                      '默认',
+                                      style: TextStyle(fontSize: 12),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            value: branch.name,
+                            groupValue: _selectedBranch,
+                            controlAffinity: ListTileControlAffinity.trailing,
+                            onChanged: (value) {
+                              _selectedBranch = value!;
+                              Navigator.of(context).pop();
+                              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                                fetchInfo();
+                              });
+                            },
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
               ),
             ),
           ),

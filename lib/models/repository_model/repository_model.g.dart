@@ -37,6 +37,9 @@ RepositoryModel _$RepositoryModelFromJson(Map<String, dynamic> json) =>
       discussions: json['discussions'] == null
           ? const RepositoryDiscussionsConnection()
           : RepositoryDiscussionsConnection.fromJson(json['discussions']),
+      refs: json['refs'] == null
+          ? const RepositoryRefsConnection()
+          : RepositoryRefsConnection.fromJson(json['refs']),
     );
 
 Map<String, dynamic> _$RepositoryModelToJson(RepositoryModel instance) =>
@@ -56,4 +59,5 @@ Map<String, dynamic> _$RepositoryModelToJson(RepositoryModel instance) =>
       'issues': instance.issues.toJson(),
       'pullRequests': instance.pullRequests.toJson(),
       'discussions': instance.discussions.toJson(),
+      'refs': instance.refs.toJson(),
     };

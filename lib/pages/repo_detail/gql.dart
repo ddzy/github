@@ -2,7 +2,7 @@ part of 'repo_detail.dart';
 
 String getInfo() {
   return """ 
-    query(\$id: ID!) {
+    query(\$id: ID!, \$expression: String!) {
       node(id: \$id) {
         ... on Repository {
           id
@@ -38,7 +38,7 @@ String getInfo() {
             name
             prefix
           }
-          object(expression: "HEAD:README.md") {
+          object(expression: \$expression) {
             id
             oid
             ... on Blob {
@@ -77,17 +77,19 @@ String postUnstar() {
   """;
 }
 
-String getReadme() {
-  return """ 
+String getBranches() {
+  return """
     query(\$id: ID!) {
       node(id: \$id) {
         ... on Repository {
-          object(expression: "HEAD:README.md") {
+          defaultBranchRef {
             id
-            oid
-            ... on Blob {
-              text
-              byteSize
+            name
+          }
+          refs(last: 50, refPrefix: "refs/heads/") {
+            nodes {
+              id
+              name
             }
           }
         }

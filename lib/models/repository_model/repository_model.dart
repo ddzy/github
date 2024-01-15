@@ -5,6 +5,7 @@ import 'package:github/models/repository_model/repository_discussions_connection
 import 'package:github/models/repository_model/repository_issues_connection.dart';
 import 'package:github/models/repository_model/repository_owner_interface.dart';
 import 'package:github/models/repository_model/repository_prs_connection.dart';
+import 'package:github/models/repository_model/repository_refs_connection.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'repository_model.g.dart';
@@ -29,6 +30,7 @@ class RepositoryModel {
     this.issues = const RepositoryIssuesConnection(),
     this.pullRequests = const RepositoryPrsConnection(),
     this.discussions = const RepositoryDiscussionsConnection(),
+    this.refs = const RepositoryRefsConnection(),
   });
 
   final String id;
@@ -46,6 +48,7 @@ class RepositoryModel {
   final RepositoryIssuesConnection issues;
   final RepositoryPrsConnection pullRequests;
   final RepositoryDiscussionsConnection discussions;
+  final RepositoryRefsConnection refs;
 
   factory RepositoryModel.fromJson(json) {
     return _$RepositoryModelFromJson(json);
