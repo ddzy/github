@@ -79,14 +79,14 @@ String postUnstar() {
 
 String getBranches() {
   return """
-    query(\$id: ID!) {
+    query(\$id: ID!, \$query: String!) {
       node(id: \$id) {
         ... on Repository {
           defaultBranchRef {
             id
             name
           }
-          refs(last: 50, refPrefix: "refs/heads/") {
+          refs(last: 50, refPrefix: "refs/heads/", query: \$query) {
             nodes {
               id
               name

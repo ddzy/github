@@ -8,6 +8,7 @@ import 'package:github/components/custom_link/custom_link.dart';
 import 'package:github/main.dart';
 import 'package:github/models/ref_model/ref_model.dart';
 import 'package:github/models/repository_model/repository_model.dart';
+import 'package:github/utils/debounce.dart';
 import 'package:github/utils/utils.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:transparent_image/transparent_image.dart';
@@ -35,8 +36,11 @@ class _RepoDetailPageState extends State<RepoDetailPage> with TickerProviderStat
   String _selectedBranch = '';
   late RepositoryModel _data;
   late List<RefModel> _branches;
+  late Refetch? _branchesRefetcher;
   late AnimationController _controller;
   late Animation<Offset> _animation;
+  final TextEditingController _searchController = TextEditingController();
+  final _searchDebouncer = $Debounce(delay: const Duration(milliseconds: 500));
 
   @override
   void initState() {
@@ -396,7 +400,7 @@ class _RepoDetailPageState extends State<RepoDetailPage> with TickerProviderStat
                   builder: (context) {
                     return _buildBranchSheet(context);
                   },
-                );
+                ).then((value) => _searchController.clear());
               },
               child: const Text('更改分支'),
             ),
@@ -470,13 +474,27 @@ class _RepoDetailPageState extends State<RepoDetailPage> with TickerProviderStat
               ),
             ],
           ),
-          const Padding(
-            padding: EdgeInsets.fromLTRB(12, 12, 12, 12),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
             child: TextField(
               decoration: InputDecoration(
-                icon: Icon(Icons.search),
+                icon: const Icon(Icons.search),
                 hintText: '搜索分支',
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    _searchController.clear();
+                    setState(() {});
+                  },
+                  icon: const Icon(Icons.close),
+                ),
               ),
+              controller: _searchController,
+              onChanged: (value) {
+                _searchDebouncer.run(() {
+                  // 搜索分支
+                  _branchesRefetcher!();
+                });
+              },
             ),
           ),
           Expanded(
@@ -486,6 +504,7 @@ class _RepoDetailPageState extends State<RepoDetailPage> with TickerProviderStat
                   document: gql(getBranches()),
                   variables: {
                     'id': _data.id,
+                    'query': _searchController.text,
                   },
                   fetchPolicy: FetchPolicy.noCache,
                 ),
@@ -506,9 +525,11 @@ class _RepoDetailPageState extends State<RepoDetailPage> with TickerProviderStat
                   }
                   var branchData = RepositoryModel.fromJson(result.data?['node']);
                   _branches = branchData.refs.nodes;
+                  _branchesRefetcher = refetch;
                   if (_selectedBranch.isEmpty) {
                     _selectedBranch = branchData.defaultBranchRef.name;
                   }
+                  inspect(_branches);
 
                   return ListView.builder(
                     itemCount: _branches.length,
@@ -623,6 +644,13 @@ class _RepoDetailPageState extends State<RepoDetailPage> with TickerProviderStat
     // TODO: implement reassemble
     super.reassemble();
     fetchInfo(isFirstFetch: true);
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _searchDebouncer.dispose();
   }
 
   @override
