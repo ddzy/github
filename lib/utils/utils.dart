@@ -18,6 +18,7 @@ class IUtilsInterface {
         SnackBar(
           content: newChild,
           duration: duration,
+          behavior: SnackBarBehavior.floating,
         ),
       );
   }
@@ -34,6 +35,11 @@ class IUtilsInterface {
   /// 弧度转角度
   double radianToAngle(double radian) {
     return 180 * radian / pi;
+  }
+
+  /// 检查某个值是否存在
+  bool isExist(v) {
+    return !['', false, null, 0].contains(v);
   }
 }
 

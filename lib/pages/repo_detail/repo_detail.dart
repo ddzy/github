@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:github/components/common_select_lists_sheet/common_select_lists_sheet.dart';
 import 'package:github/components/custom_empty/custom_empty.dart';
 import 'package:github/components/custom_link/custom_link.dart';
 import 'package:github/main.dart';
@@ -291,6 +292,13 @@ class _RepoDetailPageState extends State<RepoDetailPage> with TickerProviderStat
                             onPressed: () {
                               if (!_data.viewerHasStarred && !_isStarLoading) {
                                 _toggleStar(true);
+                              } else {
+                                showModalBottomSheet(
+                                  context: context,
+                                  builder: (context) {
+                                    return CommonSelectListsSheet(itemId: _data.id);
+                                  },
+                                );
                               }
                             },
                             icon: _data.viewerHasStarred ? const Icon(Icons.add) : const Icon(Icons.star_border),
