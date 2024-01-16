@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+
+
 class IUtilsInterface {
   void showSnackBar(BuildContext context, Widget child, {bool center = true, Duration duration = const Duration(milliseconds: 2000)}) {
     var newChild = center
@@ -11,9 +13,10 @@ class IUtilsInterface {
             ),
           )
         : child;
+    var messenger = ScaffoldMessenger.of(context);
 
-    ScaffoldMessenger.of(context)
-      ..removeCurrentSnackBar()
+    messenger
+      ..clearSnackBars()
       ..showSnackBar(
         SnackBar(
           content: newChild,

@@ -1,4 +1,3 @@
-
 import 'package:github/models/repository_model/repository_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 

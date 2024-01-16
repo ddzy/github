@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -8,9 +9,10 @@ import 'package:github/utils/utils.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 class CommonSelectListsSheet extends StatefulWidget {
-  const CommonSelectListsSheet({super.key, required this.itemId});
+  const CommonSelectListsSheet({super.key, required this.itemId, this.maxHeight = 350});
 
   final String itemId;
+  final double maxHeight;
 
   @override
   State<StatefulWidget> createState() {
@@ -23,7 +25,7 @@ class _CommonSelectListsSheetState extends State<CommonSelectListsSheet> {
 
   List<UserListModel> _lists = [];
   final bool _isFirstlyFetch = true;
-  final List<String> _selectedList = [];
+  final HashSet<String> _selectedSet = HashSet();
 
   Widget _buildPageLoading() {
     return const Center(
@@ -45,13 +47,13 @@ class _CommonSelectListsSheetState extends State<CommonSelectListsSheet> {
       child: InkWell(
         child: CheckboxListTile(
           title: Text(data.name),
-          value: _selectedList.contains(data.id),
+          value: _selectedSet.contains(data.id),
           onChanged: (value) {
             setState(() {
               if (!$utils.isExist(value)) {
-                _selectedList.remove(data.id);
+                _selectedSet.remove(data.id);
               } else {
-                _selectedList.add(data.id);
+                _selectedSet.add(data.id);
               }
             });
           },
@@ -63,12 +65,26 @@ class _CommonSelectListsSheetState extends State<CommonSelectListsSheet> {
   @override
   Widget build(BuildContext context) {
     return ConstrainedBox(
-      constraints: const BoxConstraints(
-        maxHeight: 400,
+      constraints: BoxConstraints(
+        maxHeight: widget.maxHeight,
       ),
       child: Scaffold(
         body: Query(
-          options: QueryOptions(document: gql(getLists()), fetchPolicy: FetchPolicy.noCache),
+          options: QueryOptions(
+            document: gql(getLists()),
+            fetchPolicy: FetchPolicy.noCache,
+            onComplete: (data) {
+              if ($utils.isExist(data)) {
+                var newLists = data?['viewer']?['lists']?['nodes'] as List;
+                _lists = newLists.map((v) => UserListModel.fromJson(v)).toList();
+                for (var element in _lists) {
+                  if (element.items.nodes.indexWhere((element) => element.id == widget.itemId) != -1) {
+                    _selectedSet.add(element.id);
+                  }
+                }
+              }
+            },
+          ),
           builder: (
             QueryResult result, {
             Refetch? refetch,
@@ -81,63 +97,65 @@ class _CommonSelectListsSheetState extends State<CommonSelectListsSheet> {
               return _buildPageException();
             }
 
-            var newLists = result.data?['viewer']?['lists']?['nodes'] as List;
-            _lists = newLists.map((v) => UserListModel.fromJson(v)).toList();
-
             return SafeArea(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  ListTile(
-                    trailing: Mutation(
-                      options: MutationOptions(
-                        document: gql(addIntoLists()),
-                      ),
-                      builder: (
-                        RunMutation runMutation,
-                        QueryResult? result,
-                      ) {
-                        if (result!.hasException) {
-                          inspect(result.exception);
-                          WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                            var errorMessage = result.exception?.graphqlErrors[0].message;
-                            $utils.clearSnackBar(context);
-                            $utils.showSnackBar(context, Text(errorMessage ?? ''));
-                          });
-                        }
-                        if ($utils.isExist(result.data)) {
-                          Navigator.of(context).pop();
-                        }
-
-                        return TextButton.icon(
-                          onPressed: () {
-                            if (result.isLoading) {
-                              return;
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 12, 20, 12),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        TextButton.icon(
+                          onPressed: () {},
+                          icon: const Icon(Icons.add),
+                          label: const Text('创建列表'),
+                        ),
+                        Mutation(
+                          options: MutationOptions(
+                            document: gql(addIntoLists()),
+                            onCompleted: (data) {
+                              if ($utils.isExist(data)) {
+                                WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                                  $utils.showSnackBar(context, const Text('保存成功'));
+                                });
+                              }
+                            },
+                            onError: (error) {
+                              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                                var errorMessage = error?.graphqlErrors[0].message;
+                                $utils.showSnackBar(context, Text(errorMessage ?? ''));
+                              });
+                            },
+                          ),
+                          builder: (
+                            RunMutation runMutation,
+                            QueryResult? result,
+                          ) {
+                            if (!$utils.isExist(result)) {
+                              return Container();
                             }
-                            runMutation(
-                              {
-                                // 'itemId': widget.itemId,
-                                'listIds': _selectedList,
-                                'suggestListIds': const [],
-                              },
+                            return TextButton.icon(
+                              onPressed: result!.isLoading
+                                  ? null
+                                  : () {
+                                      runMutation(
+                                        {
+                                          'itemId': widget.itemId,
+                                          'listIds': _selectedSet.toList(),
+                                          'suggestListIds': const [],
+                                        },
+                                      );
+                                    },
+                              icon: const Icon(Icons.check),
+                              label: const Text('保存'),
                             );
                           },
-                          icon: result.isLoading
-                              ? const SizedBox(
-                                  width: 16,
-                                  height: 16,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                  ),
-                                )
-                              : const SizedBox(),
-                          label: const Text('保存'),
-                        );
-                      },
+                        ),
+                      ],
                     ),
                   ),
-                  ConstrainedBox(
-                    constraints: const BoxConstraints(maxHeight: 300),
+                  Expanded(
                     child: ListView.builder(
                       shrinkWrap: true,
                       itemCount: _lists.length,
@@ -145,31 +163,6 @@ class _CommonSelectListsSheetState extends State<CommonSelectListsSheet> {
                         var item = _lists[index];
                         return _buildListItem(item);
                       },
-                    ),
-                  ),
-                  Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      child: ListTile(
-                        title: Row(
-                          children: [
-                            Icon(
-                              Icons.add,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 12),
-                              child: Text(
-                                '创建列表',
-                                style: TextStyle(
-                                  color: Theme.of(context).colorScheme.primary,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        onTap: () {},
-                      ),
                     ),
                   ),
                 ],
