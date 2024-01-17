@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:ui';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -625,17 +626,7 @@ class _RepoDetailPageState extends State<RepoDetailPage> with TickerProviderStat
                 <md.InlineSyntax>[md.EmojiSyntax(), ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes],
               ),
               imageBuilder: (uri, title, alt) {
-                // 如果图片不以[png, jpg, jpeg, svg]结尾，那么就添加[png]后缀
-                var url = uri.toString();
-                var reg = RegExp(r"(\.png)|(\.jpg)|(\.jpeg)|(\.svg)$");
-                if (!reg.hasMatch(url)) {
-                  url = '$url.png';
-                }
-
-                return FadeInImage(
-                  placeholder: MemoryImage(kTransparentImage),
-                  image: NetworkImage(url),
-                );
+                return ExtendedImage.network(uri.toString(), cache: true);
               },
               onTapLink: (text, href, title) {
                 launchUrl(Uri.parse(href ?? ''));
