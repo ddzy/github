@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:github/utils/utils.dart';
 import 'package:go_router/go_router.dart';
@@ -29,47 +27,28 @@ class _CreateUserListPageState extends State<CreateUserListPage> {
           Mutation(
             options: MutationOptions(
               document: gql(postUserList()),
+              onCompleted: (data) {
+                if ($utils.isExist(data)) {
+                  $utils.showSnackBar(context, const Text('创建成功'));
+                  if (context.canPop()) {
+                    context.pop();
+                  }
+                }
+              },
+              onError: (error) {
+                var message = error?.graphqlErrors[0].message;
+                $utils.showSnackBar(context, Text(message ?? '请求出错'));
+              },
             ),
             builder: (RunMutation runMutation, QueryResult? result) {
-              if (result!.isLoading) {
-                return Container(
-                  margin: const EdgeInsets.only(right: 20),
-                  child: const Center(
-                    child: SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: Center(
-                        child: CircularProgressIndicator(
-                          strokeWidth: 3,
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              }
-              if (result.hasException) {
-                inspect(result.exception);
-                WidgetsBinding.instance.addPostFrameCallback(
-                  (timeStamp) {
-                    var message = result.exception?.graphqlErrors[0].message;
-                    $utils.clearSnackBar(context);
-                    $utils.showSnackBar(context, Text(message ?? ''));
-                  },
-                );
-              }
-              if (result.data != null) {
-                WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                  if (GoRouter.of(context).canPop()) {
-                    GoRouter.of(context).pop();
-                  }
-                });
-              }
               return TextButton(
-                onPressed: () {
-                  if (_form.currentState!.validate()) {
-                    runMutation(_ruleForm.toJson());
-                  }
-                },
+                onPressed: result!.isLoading
+                    ? null
+                    : () {
+                        if (_form.currentState!.validate()) {
+                          runMutation(_ruleForm.toJson());
+                        }
+                      },
                 child: const Text(
                   "创建",
                 ),

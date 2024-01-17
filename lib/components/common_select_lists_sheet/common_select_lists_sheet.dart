@@ -1,11 +1,13 @@
+import 'dart:async';
 import 'dart:collection';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:github/components/common_select_lists_sheet/gql.dart';
 import 'package:github/components/custom_empty/custom_empty.dart';
+import 'package:github/main.dart';
 import 'package:github/models/user_list_model/user_list_model.dart';
 import 'package:github/utils/utils.dart';
+import 'package:go_router/go_router.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 class CommonSelectListsSheet extends StatefulWidget {
@@ -24,7 +26,7 @@ class _CommonSelectListsSheetState extends State<CommonSelectListsSheet> {
   _CommonSelectListsSheetState();
 
   List<UserListModel> _lists = [];
-  final bool _isFirstlyFetch = true;
+  Refetch? _refetch;
   final HashSet<String> _selectedSet = HashSet();
 
   Widget _buildPageLoading() {
@@ -63,6 +65,24 @@ class _CommonSelectListsSheetState extends State<CommonSelectListsSheet> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    $routeObserver.addListener((route, previousRoute) async {
+      var path = route.settings.name ?? '';
+      var prevPath = previousRoute?.settings.name ?? '';
+      if (path == '' && prevPath == '/create-user-list') {
+        // 重新获取列表
+        if ($utils.isExist(_refetch)) {
+          // 防止 github 数据更新不及时
+          Timer(const Duration(milliseconds: 1000), () {
+            _refetch!();
+          });
+        }
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ConstrainedBox(
       constraints: BoxConstraints(
@@ -90,12 +110,14 @@ class _CommonSelectListsSheetState extends State<CommonSelectListsSheet> {
             Refetch? refetch,
             FetchMore? fetchMore,
           }) {
-            if (result.isLoading && _isFirstlyFetch) {
+            if (result.isLoading) {
               return _buildPageLoading();
             }
             if (result.hasException) {
               return _buildPageException();
             }
+
+            _refetch = refetch;
 
             return SafeArea(
               child: Column(
@@ -107,7 +129,9 @@ class _CommonSelectListsSheetState extends State<CommonSelectListsSheet> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         TextButton.icon(
-                          onPressed: () {},
+                          onPressed: () {
+                            GoRouter.of(context).push('/create-user-list');
+                          },
                           icon: const Icon(Icons.add),
                           label: const Text('创建列表'),
                         ),
