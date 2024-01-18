@@ -27,6 +27,9 @@ class _CustomLanguageViewboxState extends State<CustomLanguageViewbox> {
           language: widget.language,
           theme: MediaQueryData.fromView(View.of(context)).platformBrightness == Brightness.light ? atomOneLightTheme : atomOneDarkTheme,
           padding: const EdgeInsets.all(12),
+          textStyle: const TextStyle(
+            height: 1.5,
+          ),
         ),
       ),
     );
