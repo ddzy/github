@@ -1,6 +1,9 @@
+
 import 'package:flutter/material.dart';
 import 'package:github/pages/create_user_list/create_user_list.dart';
+import 'package:github/pages/repo_code/repo_code.dart';
 import 'package:github/pages/repo_detail/repo_detail.dart';
+import 'package:github/utils/utils.dart';
 import 'package:go_router/go_router.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -90,7 +93,8 @@ class MyApp extends StatelessWidget {
               // 每次 hotreload 时，根据 token 来判断跳到登录页或者停留在当前页
               final storage = await SharedPreferences.getInstance();
               var token = storage.getString($constants.storageToken.githubAccessToken);
-              return token == null ? '/login' : '/starred';
+              // return token == null ? '/login' : '/repo-code/MDQ6QmxvYjExMjg0MjIwNzoyNWZhNjU0MjAzYWMxOTIwM2JkODdmY2E4NmMzZDY0YjE4Y2QzMWY5';
+              return token == null ? '/login' : '/repo-detail/MDEwOlJlcG9zaXRvcnkxMTI4NDIyMDc=';
             },
           ),
           GoRoute(
@@ -137,6 +141,21 @@ class MyApp extends StatelessWidget {
           var params = state.pathParameters;
           return RepoDetailPage(
             id: params['id'] ?? '',
+          );
+        },
+      ),
+      GoRoute(
+        path: '/repo-code/:id',
+        builder: (context, state) {
+          var params = state.pathParameters;
+          var query = state.uri.queryParameters;
+          var id = params['id'] ?? '';
+          var branch = $utils.isExist(query['branch']) ? (query['branch'] as String) : 'HEAD';
+          var path = query['path'];
+          return RepoCodePage(
+            id: id,
+            branch: branch,
+            path: path,
           );
         },
       ),

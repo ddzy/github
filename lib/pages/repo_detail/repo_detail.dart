@@ -12,6 +12,7 @@ import 'package:github/models/ref_model/ref_model.dart';
 import 'package:github/models/repository_model/repository_model.dart';
 import 'package:github/utils/debounce.dart';
 import 'package:github/utils/utils.dart';
+import 'package:go_router/go_router.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -431,7 +432,10 @@ class _RepoDetailPageState extends State<RepoDetailPage> with TickerProviderStat
                   ),
                 ),
                 title: const Text('代码'),
-                onTap: () {},
+                onTap: () {
+                  var branch = _selectedBranch.isEmpty ? _data.defaultBranchRef.name : _selectedBranch;
+                  context.push('/repo-code/${_data.id}?branch=$branch');
+                },
               ),
             ),
           ),

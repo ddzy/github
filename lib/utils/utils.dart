@@ -42,7 +42,7 @@ class IUtilsInterface {
 
   /// 检查某个值是否存在
   bool isExist(v) {
-    return !['', false, null, 0].contains(v);
+    return !['', false, null, 0, ""].contains(v);
   }
 }
 
