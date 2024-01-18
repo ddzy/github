@@ -1,22 +1,28 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:github/components/custom_language_viewbox/custom_language_viewbox.dart';
 import 'package:github/components/custom_empty/custom_empty.dart';
+import 'package:github/components/custom_markdown_viewbox/custom_markdown_viewbox.dart';
 import 'package:github/models/repository_model/repository_model.dart';
 import 'package:github/models/tree_entry_model/tree_entry_model.dart';
 import 'package:github/utils/utils.dart';
+import 'package:go_router/go_router.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 part 'gql.dart';
 
 class RepoCodePage extends StatefulWidget {
-  RepoCodePage({super.key, required this.id, required this.branch, required this.path})
-      : expression = $utils.isExist(path) ? '$branch:$path' : '$branch:';
+  RepoCodePage({super.key, required this.id, required this.branch, required this.path, required this.language})
+      : expression = $utils.isExist(path) ? '$branch:$path' : '$branch:',
+        title = $utils.isExist(path) ? path! : '文件';
 
   final String id;
   final String branch;
   final String? path;
+  final String? language;
   final String expression;
+  final String title;
 
   @override
   State<StatefulWidget> createState() {
@@ -25,7 +31,6 @@ class RepoCodePage extends StatefulWidget {
 }
 
 class _RepoCodeState extends State<RepoCodePage> {
-  final String _title = '文件';
   RepositoryModel _repoInfo = RepositoryModel();
   List<TreeEntryModel> _tree = [];
 
@@ -74,17 +79,33 @@ class _RepoCodeState extends State<RepoCodePage> {
         child: ListTile(
           leading: icon,
           title: Text(data.name),
-          onTap: () {},
+          onTap: () {
+            if (data.type == 'tree') {
+              context.push('/repo-code/${widget.id}?branch=${widget.branch}&path=${data.path}');
+            } else if (data.type == 'blob') {
+              context.push('/repo-code/${widget.id}?branch=${widget.branch}&path=${data.path}&language=${data.language.name.toLowerCase()}');
+            }
+          },
         ),
       ),
     );
+  }
+
+  Widget _buildBlob() {
+    var language = $utils.isExist(widget.language) ? widget.language! : '';
+
+    if (language == 'markdown') {
+      return CustomMarkdownViewbox(data: _repoInfo.object.text);
+    } else {
+      return CustomLanguageViewbox(code: _repoInfo.object.text, language: language);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_title),
+        title: Text(widget.title),
         centerTitle: false,
       ),
       body: Query(
@@ -124,8 +145,9 @@ class _RepoCodeState extends State<RepoCodePage> {
                 },
               );
             case 'Blob':
-              return Container(
-                child: const Text('Blob文件'),
+              return SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: _buildBlob(),
               );
             default:
               return Container();

@@ -12,6 +12,7 @@ TreeEntryModel _$TreeEntryModelFromJson(Map<String, dynamic> json) =>
       name: json['name'] as String? ?? '',
       path: json['path'] as String? ?? '',
       type: json['type'] as String? ?? '',
+      extension: json['extension'] as String? ?? '',
       size: json['size'] as int? ?? 0,
       language: json['language'] == null
           ? const LanguageModel()
@@ -30,6 +31,7 @@ Map<String, dynamic> _$TreeEntryModelToJson(TreeEntryModel instance) =>
       'name': instance.name,
       'path': instance.path,
       'type': instance.type,
+      'extension': instance.extension,
       'size': instance.size,
       'language': instance.language.toJson(),
       'submodule': instance.submodule.toJson(),

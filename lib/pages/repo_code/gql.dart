@@ -15,6 +15,11 @@ String getInfo() {
                 name
                 path
                 type
+                extension
+                language {
+                  id
+                  name
+                }
                 object {
                   ... on Blob {
                     id

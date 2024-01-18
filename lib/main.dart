@@ -152,10 +152,12 @@ class MyApp extends StatelessWidget {
           var id = params['id'] ?? '';
           var branch = $utils.isExist(query['branch']) ? (query['branch'] as String) : 'HEAD';
           var path = query['path'];
+          var language = query['language'];
           return RepoCodePage(
             id: id,
             branch: branch,
             path: path,
+            language: language,
           );
         },
       ),
