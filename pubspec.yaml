@@ -24,9 +24,7 @@ dependencies:
   markdown: ^7.1.1
   visibility_detector: ^0.4.0+2
   extended_image: ^8.2.0
-  # flutter_highlighter: ^0.1.1
-  flutter_highlighter: 
-    path: ./patches/flutter_highlighter-0.1.1-hacking/
+  flutter_highlighter: ^0.1.1
 
 dev_dependencies:
   flutter_test:

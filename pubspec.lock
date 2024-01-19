@@ -281,9 +281,10 @@ packages:
   flutter_highlighter:
     dependency: "direct main"
     description:
-      path: "patches/flutter_highlighter-0.1.1-hacking"
-      relative: true
-    source: path
+      name: flutter_highlighter
+      sha256: "93173afd47a9ada53f3176371755e7ea4a1065362763976d06d6adfb4d946e10"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
     version: "0.1.1"
   flutter_hooks:
     dependency: transitive
