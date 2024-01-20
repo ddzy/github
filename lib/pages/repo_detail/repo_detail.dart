@@ -20,10 +20,10 @@ import 'package:visibility_detector/visibility_detector.dart';
 part 'gql.dart';
 
 class RepoDetailPage extends StatefulWidget {
-  const RepoDetailPage({super.key, required this.user, required this.repoId});
+  const RepoDetailPage({super.key, required this.user, required this.repoName});
 
   final String user;
-  final String repoId;
+  final String repoName;
 
   @override
   State<StatefulWidget> createState() {
@@ -108,7 +108,8 @@ class _RepoDetailPageState extends State<RepoDetailPage> with TickerProviderStat
       QueryOptions(
         document: gql(getInfo()),
         variables: {
-          'id': widget.repoId,
+          'name': widget.repoName,
+          'owner': widget.user,
           'expression': "${_selectedBranch.isEmpty ? 'HEAD' : _selectedBranch}:README.md",
         },
         fetchPolicy: FetchPolicy.noCache,
@@ -120,7 +121,7 @@ class _RepoDetailPageState extends State<RepoDetailPage> with TickerProviderStat
         _widget = _buildPageException();
       });
     } else {
-      var data = RepositoryModel.fromJson(result.data?['node']);
+      var data = RepositoryModel.fromJson(result.data?['repository']);
       _data = data;
 
       setState(() {
@@ -432,7 +433,7 @@ class _RepoDetailPageState extends State<RepoDetailPage> with TickerProviderStat
                 title: const Text('代码'),
                 onTap: () {
                   var branch = _selectedBranch.isEmpty ? _data.defaultBranchRef.name : _selectedBranch;
-                  context.push('/user/${widget.user}/repository/${_data.id}/tree/$branch');
+                  context.push('/user/${widget.user}/repository/${widget.repoName}/tree/$branch');
                 },
               ),
             ),
@@ -454,7 +455,9 @@ class _RepoDetailPageState extends State<RepoDetailPage> with TickerProviderStat
                   ),
                 ),
                 title: const Text('提交'),
-                onTap: () {},
+                onTap: () {
+                  context.push('/user/${widget.user}/repository/${widget.repoName}/commit');
+                },
               ),
             ),
           ),
@@ -514,7 +517,8 @@ class _RepoDetailPageState extends State<RepoDetailPage> with TickerProviderStat
                 options: QueryOptions(
                   document: gql(getBranches()),
                   variables: {
-                    'id': _data.id,
+                    'owner': widget.user,
+                    'name': widget.repoName,
                     'query': _searchController.text,
                   },
                   fetchPolicy: FetchPolicy.noCache,
@@ -534,7 +538,7 @@ class _RepoDetailPageState extends State<RepoDetailPage> with TickerProviderStat
                     inspect(result.exception);
                     return _buildPageException();
                   }
-                  var branchData = RepositoryModel.fromJson(result.data?['node']);
+                  var branchData = RepositoryModel.fromJson(result.data?['repository']);
                   _branches = branchData.refs.nodes;
                   _branchesRefetcher = refetch;
                   if (_selectedBranch.isEmpty) {

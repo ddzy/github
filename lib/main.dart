@@ -84,7 +84,7 @@ class MyApp extends StatelessWidget {
   final GoRouter _router = GoRouter(
     observers: [$routeObserver],
     navigatorKey: $router,
-    initialLocation: '/my',
+    initialLocation: '/user/ddzy/repository/vue3-ui',
     routes: [
       GoRoute(
         path: '/login',
@@ -140,43 +140,43 @@ class MyApp extends StatelessWidget {
             },
           ),
           GoRoute(
-            path: '/user/:user/repository/:repoId',
+            path: '/user/:user/repository/:repoName',
             builder: (context, state) {
               var user = state.pathParameters['user'] ?? '';
-              var repoId = state.pathParameters['repoId'] ?? '';
+              var repoName = state.pathParameters['repoName'] ?? '';
               return RepoDetailPage(
                 user: user,
-                repoId: repoId,
+                repoName: repoName,
               );
             },
           ),
           GoRoute(
-            path: '/user/:user/repository/:repoId/:type/:branch',
+            path: '/user/:user/repository/:repoName/:type/:branch',
             builder: (context, state) {
               var user = state.pathParameters['user'] ?? '';
-              var repoId = state.pathParameters['repoId'] ?? '';
+              var repoName = state.pathParameters['repoName'] ?? '';
               var type = state.pathParameters['type'] ?? '';
               var branch = state.pathParameters['branch'] ?? 'HEAD';
               return RepoCodePage(
                 user: user,
-                repoId: repoId,
+                repoName: repoName,
                 branch: branch,
                 type: type,
               );
             },
           ),
           GoRoute(
-            path: '/user/:user/repository/:repoId/:type/:branch/:path',
+            path: '/user/:user/repository/:repoName/:type/:branch/:path',
             builder: (context, state) {
               var user = state.pathParameters['user'] ?? '';
-              var repoId = state.pathParameters['repoId'] ?? '';
+              var repoName = state.pathParameters['repoName'] ?? '';
               var type = state.pathParameters['type'] ?? '';
               var branch = state.pathParameters['branch'] ?? 'HEAD';
               var path = state.pathParameters['path'] ?? '';
               var language = state.uri.queryParameters['language'];
               return RepoCodePage(
                 user: user,
-                repoId: repoId,
+                repoName: repoName,
                 type: type,
                 branch: branch,
                 path: Uri.decodeComponent(path),
@@ -185,24 +185,24 @@ class MyApp extends StatelessWidget {
             },
           ),
           GoRoute(
-            path: '/user/:user/repository/:repoId/commit',
+            path: '/user/:user/repository/:repoName/commit',
             builder: (context, state) {
               var user = state.pathParameters['user'] ?? '';
-              var repoId = state.pathParameters['repoId'] ?? '';
+              var repoName = state.pathParameters['repoName'] ?? '';
               return CommitPage(
                 user: user,
-                repoId: repoId,
+                repoName: repoName,
               );
             },
           ),
           GoRoute(
-            path: '/user/:user/repository/:repoId/commit/:commitId',
+            path: '/user/:user/repository/:repoName/commit/:commitId',
             builder: (context, state) {
               var user = state.pathParameters['user'] ?? '';
-              var repoId = state.pathParameters['repoId'] ?? '';
+              var repoName = state.pathParameters['repoName'] ?? '';
               return CommitPage(
                 user: user,
-                repoId: repoId,
+                repoName: repoName,
               );
             },
           ),

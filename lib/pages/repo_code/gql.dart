@@ -2,36 +2,34 @@ part of 'repo_code.dart';
 
 String getInfo() {
   return """ 
-    query(\$id: ID!, \$expression: String!) {
-      node(id: \$id) {
-        ... on Repository {
-          id
-          name
-          object(expression: \$expression) {
-            typeName: __typename
-            ... on Tree {
-              entries {
-                oid
+    query(\$name: String!, \$owner: String!, \$expression: String!) {
+      repository(name: \$name, owner: \$owner) {
+        id
+        name
+        object(expression: \$expression) {
+          typeName: __typename
+          ... on Tree {
+            entries {
+              oid
+              name
+              path
+              type
+              extension
+              language {
+                id
                 name
-                path
-                type
-                extension
-                language {
+              }
+              object {
+                ... on Blob {
                   id
-                  name
-                }
-                object {
-                  ... on Blob {
-                    id
-                    text
-                  }
+                  text
                 }
               }
             }
-            ... on Blob {
-              id
-              text
-            }
+          }
+          ... on Blob {
+            id
+            text
           }
         }
       }

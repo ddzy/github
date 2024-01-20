@@ -11,12 +11,12 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 part 'gql.dart';
 
 class RepoCodePage extends StatefulWidget {
-  RepoCodePage({super.key, required this.user, required this.repoId, required this.type, required this.branch, this.path, this.language})
+  RepoCodePage({super.key, required this.user, required this.repoName, required this.type, required this.branch, this.path, this.language})
       : expression = $utils.isExist(path) ? '$branch:$path' : '$branch:',
         title = $utils.isExist(path) ? path! : '文件';
 
   final String user;
-  final String repoId;
+  final String repoName;
   final String branch;
   final String type;
   final String? path;
@@ -81,7 +81,7 @@ class _RepoCodeState extends State<RepoCodePage> {
           title: Text(data.name),
           onTap: () {
             context.push(
-              '/user/${widget.user}/repository/${widget.repoId}/${data.type}/${widget.branch}/${Uri.encodeComponent(data.path)}?language=${data.language.name.toLowerCase()}',
+              '/user/${widget.user}/repository/${widget.repoName}/${data.type}/${widget.branch}/${Uri.encodeComponent(data.path)}?language=${data.language.name.toLowerCase()}',
             );
           },
         ),
@@ -110,7 +110,8 @@ class _RepoCodeState extends State<RepoCodePage> {
         options: QueryOptions(
           document: gql(getInfo()),
           variables: {
-            'id': widget.repoId,
+            'name': widget.repoName,
+            'owner': widget.user,
             'expression': widget.expression,
           },
           fetchPolicy: FetchPolicy.noCache,
@@ -128,7 +129,7 @@ class _RepoCodeState extends State<RepoCodePage> {
             }
             return _buildPageError(errMsg);
           }
-          Map<String, dynamic> parsedData = result.data?['node'] ?? {};
+          Map<String, dynamic> parsedData = result.data?['repository'] ?? {};
           _repoInfo = RepositoryModel.fromJson(parsedData);
           _tree = _sortTree();
 

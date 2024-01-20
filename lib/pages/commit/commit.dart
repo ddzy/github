@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class CommitPage extends StatefulWidget {
-  const CommitPage({super.key, required this.user, required this.repoId});
+  const CommitPage({super.key, required this.user, required this.repoName});
 
   final String user;
-  final String repoId;
+  final String repoName;
 
   @override
   State<StatefulWidget> createState() {

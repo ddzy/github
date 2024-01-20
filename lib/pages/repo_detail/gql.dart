@@ -2,49 +2,47 @@ part of 'repo_detail.dart';
 
 String getInfo() {
   return """ 
-    query(\$id: ID!, \$expression: String!) {
-      node(id: \$id) {
-        ... on Repository {
-          id
-          name
-          description
-          owner {
-            ... on User {
-              id
-              name: login
-              avatarUrl
-            }
-            ... on Organization {
-              id
-              name
-              avatarUrl
-            }
+    query(\$name: String!, \$owner: String!, \$expression: String!) {
+      repository(name: \$name, owner: \$owner) {
+        id
+        name
+        description
+        owner {
+          ... on User {
+            id
+            name: login
+            avatarUrl
           }
-          homepageUrl
-          forkCount
-          stargazerCount
-          viewerHasStarred
-          issues {
-            totalCount
-          }
-          pullRequests {
-            totalCount
-          }
-          discussions {
-            totalCount
-          }
-          defaultBranchRef {
+          ... on Organization {
             id
             name
-            prefix
+            avatarUrl
           }
-          object(expression: \$expression) {
-            id
-            oid
-            ... on Blob {
-              text
-              byteSize
-            }
+        }
+        homepageUrl
+        forkCount
+        stargazerCount
+        viewerHasStarred
+        issues {
+          totalCount
+        }
+        pullRequests {
+          totalCount
+        }
+        discussions {
+          totalCount
+        }
+        defaultBranchRef {
+          id
+          name
+          prefix
+        }
+        object(expression: \$expression) {
+          id
+          oid
+          ... on Blob {
+            text
+            byteSize
           }
         }
       }
@@ -79,18 +77,16 @@ String postUnstar() {
 
 String getBranches() {
   return """
-    query(\$id: ID!, \$query: String!) {
-      node(id: \$id) {
-        ... on Repository {
-          defaultBranchRef {
+    query(\$name: String!, \$owner: String!, \$query: String!) {
+      repository(name: \$name, owner: \$owner) {
+        defaultBranchRef {
+          id
+          name
+        }
+        refs(last: 50, refPrefix: "refs/heads/", query: \$query) {
+          nodes {
             id
             name
-          }
-          refs(last: 50, refPrefix: "refs/heads/", query: \$query) {
-            nodes {
-              id
-              name
-            }
           }
         }
       }
