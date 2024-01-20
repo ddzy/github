@@ -2,8 +2,8 @@ part of 'my.dart';
 
 String genGql() {
   return """ 
-      query getUser() {
-        viewer {
+      query getUser(\$user: String!) {
+        user(login: \$user) {
           id
           login
           avatarUrl

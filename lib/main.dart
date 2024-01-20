@@ -1,9 +1,9 @@
-
 import 'package:flutter/material.dart';
+import 'package:github/pages/commit/commit.dart';
 import 'package:github/pages/create_user_list/create_user_list.dart';
+import 'package:github/pages/repo/repo.dart';
 import 'package:github/pages/repo_code/repo_code.dart';
 import 'package:github/pages/repo_detail/repo_detail.dart';
-import 'package:github/utils/utils.dart';
 import 'package:go_router/go_router.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -84,26 +84,17 @@ class MyApp extends StatelessWidget {
   final GoRouter _router = GoRouter(
     observers: [$routeObserver],
     navigatorKey: $router,
+    initialLocation: '/my',
     routes: [
+      GoRoute(
+        path: '/login',
+        builder: (context, state) => const Login(),
+      ),
       ShellRoute(
         routes: [
           GoRoute(
-            path: '/',
-            redirect: (context, state) async {
-              // 每次 hotreload 时，根据 token 来判断跳到登录页或者停留在当前页
-              final storage = await SharedPreferences.getInstance();
-              var token = storage.getString($constants.storageToken.githubAccessToken);
-              // return token == null ? '/login' : '/repo-code/MDQ6QmxvYjExMjg0MjIwNzoyNWZhNjU0MjAzYWMxOTIwM2JkODdmY2E4NmMzZDY0YjE4Y2QzMWY5';
-              return token == null ? '/login' : '/repo-detail/MDEwOlJlcG9zaXRvcnkxMTI4NDIyMDc=';
-            },
-          ),
-          GoRoute(
             path: '/home',
             builder: (context, state) => const HomePage(),
-          ),
-          GoRoute(
-            path: '/my',
-            builder: (context, state) => const MyPage(),
           ),
           GoRoute(
             path: '/notification',
@@ -113,51 +104,116 @@ class MyApp extends StatelessWidget {
             path: '/explore',
             builder: (context, state) => const ExplorePage(),
           ),
+          GoRoute(
+            path: '/my',
+            builder: (context, state) {
+              return const MyPage(
+                user: 'ddzy',
+              );
+            },
+          ),
+          GoRoute(
+            path: '/create-user-list',
+            builder: (context, state) => const CreateUserListPage(),
+          ),
+          GoRoute(
+            path: '/user/:user',
+            builder: (context, state) {
+              var user = state.pathParameters['user'] ?? '';
+              return MyPage(user: user);
+            },
+          ),
+          GoRoute(
+            path: '/user/:user/starred',
+            builder: (context, state) {
+              var user = state.pathParameters['user'] ?? '';
+              return StarredPage(user: user);
+            },
+          ),
+          GoRoute(
+            path: '/user/:user/repository',
+            builder: (context, state) {
+              var user = state.pathParameters['user'] ?? '';
+              return RepoPage(
+                user: user,
+              );
+            },
+          ),
+          GoRoute(
+            path: '/user/:user/repository/:repoId',
+            builder: (context, state) {
+              var user = state.pathParameters['user'] ?? '';
+              var repoId = state.pathParameters['repoId'] ?? '';
+              return RepoDetailPage(
+                user: user,
+                repoId: repoId,
+              );
+            },
+          ),
+          GoRoute(
+            path: '/user/:user/repository/:repoId/:type/:branch',
+            builder: (context, state) {
+              var user = state.pathParameters['user'] ?? '';
+              var repoId = state.pathParameters['repoId'] ?? '';
+              var type = state.pathParameters['type'] ?? '';
+              var branch = state.pathParameters['branch'] ?? 'HEAD';
+              return RepoCodePage(
+                user: user,
+                repoId: repoId,
+                branch: branch,
+                type: type,
+              );
+            },
+          ),
+          GoRoute(
+            path: '/user/:user/repository/:repoId/:type/:branch/:path',
+            builder: (context, state) {
+              var user = state.pathParameters['user'] ?? '';
+              var repoId = state.pathParameters['repoId'] ?? '';
+              var type = state.pathParameters['type'] ?? '';
+              var branch = state.pathParameters['branch'] ?? 'HEAD';
+              var path = state.pathParameters['path'] ?? '';
+              var language = state.uri.queryParameters['language'];
+              return RepoCodePage(
+                user: user,
+                repoId: repoId,
+                type: type,
+                branch: branch,
+                path: Uri.decodeComponent(path),
+                language: language,
+              );
+            },
+          ),
+          GoRoute(
+            path: '/user/:user/repository/:repoId/commit',
+            builder: (context, state) {
+              var user = state.pathParameters['user'] ?? '';
+              var repoId = state.pathParameters['repoId'] ?? '';
+              return CommitPage(
+                user: user,
+                repoId: repoId,
+              );
+            },
+          ),
+          GoRoute(
+            path: '/user/:user/repository/:repoId/commit/:commitId',
+            builder: (context, state) {
+              var user = state.pathParameters['user'] ?? '';
+              var repoId = state.pathParameters['repoId'] ?? '';
+              return CommitPage(
+                user: user,
+                repoId: repoId,
+              );
+            },
+          ),
         ],
         pageBuilder: (context, state, child) {
+          var visibleNavBar = ['/home', '/notification', '/explore', '/my'];
           return MaterialPage(
             child: Scaffold(
               body: child,
-              bottomNavigationBar: const CustomBottomNavigationBar(),
+              bottomNavigationBar: visibleNavBar.contains(state.uri.path) ? const CustomBottomNavigationBar() : null,
             ),
-          );
-        },
-      ),
-      GoRoute(
-        path: '/login',
-        builder: (context, state) => const Login(),
-      ),
-      GoRoute(
-        path: '/starred',
-        builder: (context, state) => const StarredPage(),
-      ),
-      GoRoute(
-        path: '/create-user-list',
-        builder: (context, state) => const CreateUserListPage(),
-      ),
-      GoRoute(
-        path: '/repo-detail/:id',
-        builder: (context, state) {
-          var params = state.pathParameters;
-          return RepoDetailPage(
-            id: params['id'] ?? '',
-          );
-        },
-      ),
-      GoRoute(
-        path: '/repo-code/:id',
-        builder: (context, state) {
-          var params = state.pathParameters;
-          var query = state.uri.queryParameters;
-          var id = params['id'] ?? '';
-          var branch = $utils.isExist(query['branch']) ? (query['branch'] as String) : 'HEAD';
-          var path = query['path'];
-          var language = query['language'];
-          return RepoCodePage(
-            id: id,
-            branch: branch,
-            path: path,
-            language: language,
           );
         },
       ),

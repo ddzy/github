@@ -1,7 +1,5 @@
 import 'dart:developer';
-import 'dart:ui';
 import 'package:extended_image/extended_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:github/components/common_select_lists_sheet/common_select_lists_sheet.dart';
@@ -22,9 +20,10 @@ import 'package:visibility_detector/visibility_detector.dart';
 part 'gql.dart';
 
 class RepoDetailPage extends StatefulWidget {
-  const RepoDetailPage({super.key, required this.id});
+  const RepoDetailPage({super.key, required this.user, required this.repoId});
 
-  final String id;
+  final String user;
+  final String repoId;
 
   @override
   State<StatefulWidget> createState() {
@@ -109,7 +108,7 @@ class _RepoDetailPageState extends State<RepoDetailPage> with TickerProviderStat
       QueryOptions(
         document: gql(getInfo()),
         variables: {
-          'id': widget.id,
+          'id': widget.repoId,
           'expression': "${_selectedBranch.isEmpty ? 'HEAD' : _selectedBranch}:README.md",
         },
         fetchPolicy: FetchPolicy.noCache,
@@ -123,7 +122,6 @@ class _RepoDetailPageState extends State<RepoDetailPage> with TickerProviderStat
     } else {
       var data = RepositoryModel.fromJson(result.data?['node']);
       _data = data;
-      inspect(data);
 
       setState(() {
         _title = data.name;
@@ -434,7 +432,7 @@ class _RepoDetailPageState extends State<RepoDetailPage> with TickerProviderStat
                 title: const Text('代码'),
                 onTap: () {
                   var branch = _selectedBranch.isEmpty ? _data.defaultBranchRef.name : _selectedBranch;
-                  context.push('/repo-code/${_data.id}?branch=$branch');
+                  context.push('/user/${widget.user}/repository/${_data.id}/tree/$branch');
                 },
               ),
             ),
@@ -542,7 +540,6 @@ class _RepoDetailPageState extends State<RepoDetailPage> with TickerProviderStat
                   if (_selectedBranch.isEmpty) {
                     _selectedBranch = branchData.defaultBranchRef.name;
                   }
-                  inspect(_branches);
 
                   return ListView.builder(
                     itemCount: _branches.length,

@@ -15,7 +15,9 @@ import 'package:transparent_image/transparent_image.dart';
 part 'gql.dart';
 
 class StarredPage extends StatefulWidget {
-  const StarredPage({super.key});
+  const StarredPage({super.key, required this.user});
+
+  final String user;
 
   @override
   State<StatefulWidget> createState() {
@@ -44,14 +46,15 @@ class _StarredPageState extends State<StarredPage> {
               if (fetchMoreResultData == null) {
                 return fetchMoreResultData;
               }
-              fetchMoreResultData["viewer"]?['starredRepositories']?["nodes"] = [
-                ...previousResultData["viewer"]?['starredRepositories']?["nodes"],
-                ...fetchMoreResultData["viewer"]?['starredRepositories']?["nodes"],
+              fetchMoreResultData["user"]?['starredRepositories']?["nodes"] = [
+                ...previousResultData["user"]?['starredRepositories']?["nodes"],
+                ...fetchMoreResultData["user"]?['starredRepositories']?["nodes"],
               ];
               return fetchMoreResultData;
             },
             variables: {
               'after': _paginationCursor,
+              'user': widget.user,
             },
           ),
         );
@@ -104,6 +107,9 @@ class _StarredPageState extends State<StarredPage> {
             getInfo(),
           ),
           fetchPolicy: FetchPolicy.noCache,
+          variables: {
+            'user': widget.user,
+          },
         ),
         builder: (
           QueryResult result, {
@@ -129,7 +135,7 @@ class _StarredPageState extends State<StarredPage> {
               ),
             );
           }
-          var data = result.data?['viewer'];
+          var data = result.data?['user'];
           if (data == null) {
             return const Center(
               child: Column(
@@ -419,7 +425,7 @@ class _StarredPageState extends State<StarredPage> {
             ],
           ),
           onTap: () {
-            GoRouter.of(context).push('/repo-detail/${data.id}');
+            GoRouter.of(context).push('/user/${widget.user}/repository/${data.id}');
           },
         ),
       ),

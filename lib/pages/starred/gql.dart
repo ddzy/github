@@ -2,8 +2,8 @@ part of 'starred.dart';
 
 String getInfo() {
   return """
-    query (\$after: String) {
-      viewer {
+    query (\$user: String!, \$after: String) {
+      user(login: \$user) {
         lists(last: 100) {
           totalCount
           nodes {

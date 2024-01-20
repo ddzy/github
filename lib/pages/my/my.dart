@@ -11,7 +11,9 @@ import 'package:transparent_image/transparent_image.dart';
 part 'gql.dart';
 
 class MyPage extends StatefulWidget {
-  const MyPage({super.key});
+  const MyPage({super.key, required this.user});
+
+  final String user;
 
   @override
   State<StatefulWidget> createState() {
@@ -47,7 +49,9 @@ class _MyPageState extends State<MyPage> {
       body: Query(
         options: QueryOptions(
           document: gql(genGql()),
-          variables: const {},
+          variables: {
+            'user': widget.user,
+          },
           operationName: 'getUser',
         ),
         builder: (
@@ -73,7 +77,7 @@ class _MyPageState extends State<MyPage> {
             );
           }
 
-          var user = result.data?['viewer'];
+          var user = result.data?['user'];
           if (user == null) {
             return const Center(
               child: Column(
@@ -471,7 +475,7 @@ class _MyPageState extends State<MyPage> {
                               '${parsedUser.starredRepositories.totalCount}',
                             ),
                             onTap: () {
-                              context.push('/starred');
+                              context.push('/user/${widget.user}/starred');
                             },
                           ),
                         ],

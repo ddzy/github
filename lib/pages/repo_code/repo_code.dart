@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:github/components/custom_language_viewbox/custom_language_viewbox.dart';
 import 'package:github/components/custom_empty/custom_empty.dart';
@@ -13,12 +11,14 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 part 'gql.dart';
 
 class RepoCodePage extends StatefulWidget {
-  RepoCodePage({super.key, required this.id, required this.branch, required this.path, required this.language})
+  RepoCodePage({super.key, required this.user, required this.repoId, required this.type, required this.branch, this.path, this.language})
       : expression = $utils.isExist(path) ? '$branch:$path' : '$branch:',
         title = $utils.isExist(path) ? path! : '文件';
 
-  final String id;
+  final String user;
+  final String repoId;
   final String branch;
+  final String type;
   final String? path;
   final String? language;
   final String expression;
@@ -80,11 +80,9 @@ class _RepoCodeState extends State<RepoCodePage> {
           leading: icon,
           title: Text(data.name),
           onTap: () {
-            if (data.type == 'tree') {
-              context.push('/repo-code/${widget.id}?branch=${widget.branch}&path=${data.path}');
-            } else if (data.type == 'blob') {
-              context.push('/repo-code/${widget.id}?branch=${widget.branch}&path=${data.path}&language=${data.language.name.toLowerCase()}');
-            }
+            context.push(
+              '/user/${widget.user}/repository/${widget.repoId}/${data.type}/${widget.branch}/${Uri.encodeComponent(data.path)}?language=${data.language.name.toLowerCase()}',
+            );
           },
         ),
       ),
@@ -112,7 +110,7 @@ class _RepoCodeState extends State<RepoCodePage> {
         options: QueryOptions(
           document: gql(getInfo()),
           variables: {
-            'id': widget.id,
+            'id': widget.repoId,
             'expression': widget.expression,
           },
           fetchPolicy: FetchPolicy.noCache,
@@ -133,7 +131,6 @@ class _RepoCodeState extends State<RepoCodePage> {
           Map<String, dynamic> parsedData = result.data?['node'] ?? {};
           _repoInfo = RepositoryModel.fromJson(parsedData);
           _tree = _sortTree();
-          inspect(_repoInfo);
 
           switch (_repoInfo.object.typeName) {
             case 'Tree':
