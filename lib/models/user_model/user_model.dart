@@ -1,3 +1,4 @@
+import 'package:github/models/issue_model/issue_connection.dart';
 import 'package:github/models/user_model/user_followers_connection.dart';
 import 'package:github/models/user_model/user_following_connection.dart';
 import 'package:github/models/user_model/user_lists_connection.dart';
@@ -32,6 +33,7 @@ class UserModel {
   final UserOrganizationsConnection organizations;
   final UserStarredRepositoriesConnection starredRepositories;
   final UserListsConnection lists;
+  final IssueConnection issues;
 
   const UserModel({
     this.login = '',
@@ -51,6 +53,7 @@ class UserModel {
     this.organizations = const UserOrganizationsConnection(),
     this.starredRepositories = const UserStarredRepositoriesConnection(),
     this.lists = const UserListsConnection(),
+    this.issues = const IssueConnection(),
   });
 
   factory UserModel.fromJson(json) {

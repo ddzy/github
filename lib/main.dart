@@ -91,7 +91,7 @@ class MyApp extends StatelessWidget {
   final GoRouter _router = GoRouter(
     observers: [$routeObserver],
     navigatorKey: $router,
-    initialLocation: '/user/ddzy/repository/github',
+    initialLocation: '/home',
     routes: [
       GoRoute(
         path: '/login',

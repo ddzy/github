@@ -43,6 +43,9 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
       lists: json['lists'] == null
           ? const UserListsConnection()
           : UserListsConnection.fromJson(json['lists']),
+      issues: json['issues'] == null
+          ? const IssueConnection()
+          : IssueConnection.fromJson(json['issues']),
     );
 
 Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
@@ -63,4 +66,5 @@ Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
       'organizations': instance.organizations.toJson(),
       'starredRepositories': instance.starredRepositories.toJson(),
       'lists': instance.lists.toJson(),
+      'issues': instance.issues.toJson(),
     };
