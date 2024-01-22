@@ -15,6 +15,9 @@ GitObjectInterface _$GitObjectInterfaceFromJson(Map<String, dynamic> json) =>
       text: json['text'] as String? ?? '',
       byteSize: json['byteSize'] as int? ?? 0,
       message: json['message'] as String? ?? '',
+      additions: json['additions'] as int? ?? 0,
+      deletions: json['deletions'] as int? ?? 0,
+      changedFilesIfAvailable: json['changedFilesIfAvailable'] as int? ?? 0,
       committer: json['committer'] == null
           ? const GitActorModel()
           : GitActorModel.fromJson(json['committer']),
@@ -36,6 +39,9 @@ Map<String, dynamic> _$GitObjectInterfaceToJson(GitObjectInterface instance) =>
       'text': instance.text,
       'byteSize': instance.byteSize,
       'message': instance.message,
+      'additions': instance.additions,
+      'deletions': instance.deletions,
+      'changedFilesIfAvailable': instance.changedFilesIfAvailable,
       'committer': instance.committer.toJson(),
       'history': instance.history.toJson(),
       'entries': instance.entries.map((e) => e.toJson()).toList(),

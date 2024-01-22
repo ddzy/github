@@ -13,6 +13,9 @@ class CommitModel {
     this.id = '',
     this.commitUrl = '',
     this.message = '',
+    this.additions = 0,
+    this.deletions = 0,
+    this.changedFilesIfAvailable = 0,
     this.committer = const GitActorModel(),
     this.status = const CommitStatusModel(),
     this.history = const CommitHistoryConnection(),
@@ -21,6 +24,9 @@ class CommitModel {
   final String id;
   final String commitUrl;
   final String message;
+  final int additions;
+  final int deletions;
+  final int changedFilesIfAvailable;
   final GitActorModel committer;
   final CommitStatusModel status;
   final CommitHistoryConnection history;

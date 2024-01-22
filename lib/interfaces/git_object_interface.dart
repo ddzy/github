@@ -22,6 +22,9 @@ class GitObjectInterface {
     this.text = '',
     this.byteSize = 0,
     this.message = '',
+    this.additions = 0,
+    this.deletions = 0,
+    this.changedFilesIfAvailable = 0,
     this.committer = const GitActorModel(),
     this.history = const CommitHistoryConnection(),
     this.entries = const [],
@@ -39,6 +42,9 @@ class GitObjectInterface {
 
   /// [CommitModel]
   final String message;
+  final int additions;
+  final int deletions;
+  final int changedFilesIfAvailable;
   final GitActorModel committer;
   final CommitHistoryConnection history;
 

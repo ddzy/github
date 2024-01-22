@@ -10,6 +10,9 @@ CommitModel _$CommitModelFromJson(Map<String, dynamic> json) => CommitModel(
       id: json['id'] as String? ?? '',
       commitUrl: json['commitUrl'] as String? ?? '',
       message: json['message'] as String? ?? '',
+      additions: json['additions'] as int? ?? 0,
+      deletions: json['deletions'] as int? ?? 0,
+      changedFilesIfAvailable: json['changedFilesIfAvailable'] as int? ?? 0,
       committer: json['committer'] == null
           ? const GitActorModel()
           : GitActorModel.fromJson(json['committer']),
@@ -26,6 +29,9 @@ Map<String, dynamic> _$CommitModelToJson(CommitModel instance) =>
       'id': instance.id,
       'commitUrl': instance.commitUrl,
       'message': instance.message,
+      'additions': instance.additions,
+      'deletions': instance.deletions,
+      'changedFilesIfAvailable': instance.changedFilesIfAvailable,
       'committer': instance.committer.toJson(),
       'status': instance.status.toJson(),
       'history': instance.history.toJson(),
