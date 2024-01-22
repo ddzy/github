@@ -24,6 +24,9 @@ GitObjectInterface _$GitObjectInterfaceFromJson(Map<String, dynamic> json) =>
       history: json['history'] == null
           ? const CommitHistoryConnection()
           : CommitHistoryConnection.fromJson(json['history']),
+      parents: json['parents'] == null
+          ? const CommitConnection()
+          : CommitConnection.fromJson(json['parents']),
       entries: (json['entries'] as List<dynamic>?)
               ?.map(TreeEntryModel.fromJson)
               .toList() ??
@@ -44,5 +47,6 @@ Map<String, dynamic> _$GitObjectInterfaceToJson(GitObjectInterface instance) =>
       'changedFilesIfAvailable': instance.changedFilesIfAvailable,
       'committer': instance.committer.toJson(),
       'history': instance.history.toJson(),
+      'parents': instance.parents.toJson(),
       'entries': instance.entries.map((e) => e.toJson()).toList(),
     };

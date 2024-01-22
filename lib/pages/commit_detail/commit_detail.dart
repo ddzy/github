@@ -6,6 +6,7 @@ import 'package:github/components/custom_empty/custom_empty.dart';
 import 'package:github/models/commit_model/commit_model.dart';
 import 'package:github/models/commit_status_model/commit_status_model.dart';
 import 'package:github/utils/utils.dart';
+import 'package:go_router/go_router.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -193,7 +194,150 @@ class _CommitDetailPageState extends State<CommitDetailPage> {
   }
 
   Widget _buildDetailsSection() {
-    return const SingleChildScrollView();
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildDetailsCopy(),
+          _buildDetailsContributor(),
+          _buildDetailsParentCommit(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDetailsCopy() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 20),
+      color: Colors.white,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '提交',
+            style: TextStyle(color: Colors.grey.shade600),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  flex: 5,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.commit),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 12),
+                          child: Text(
+                            _commitModel.oid,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: TextButton(onPressed: () {}, child: const Text('复制')),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDetailsContributor() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border(top: BorderSide(color: Colors.grey.shade200)),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '贡献者',
+            style: TextStyle(color: Colors.grey.shade600),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                CircleAvatar(
+                  backgroundImage: ExtendedImage.network(_commitModel.committer.avatarUrl).image,
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 12),
+                    child: Text(
+                      _commitModel.committer.name,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDetailsParentCommit() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border(top: BorderSide(color: Colors.grey.shade200)),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '其它',
+            style: TextStyle(color: Colors.grey.shade600),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextButton.icon(
+                  onPressed: () {
+                    var prevCommitId = _commitModel.parents.nodes.firstOrNull?.id ?? '';
+                    if ($utils.isExist(prevCommitId)) {
+                      context.push('/user/${widget.user}/repository/${widget.repoName}/commit/$prevCommitId?detail=true');
+                    }
+                  },
+                  icon: const Icon(Icons.arrow_back_sharp),
+                  label: const Text('上一个'),
+                ),
+                TextButton.icon(
+                  onPressed: () {
+                    var nextCommitId = _commitModel.history.nodes.lastOrNull?.id ?? '';
+                    if ($utils.isExist(nextCommitId)) {
+                      context.push('/user/${widget.user}/repository/${widget.repoName}/commit/$nextCommitId?detail=true');
+                    }
+                  },
+                  icon: const Icon(Icons.arrow_forward_sharp),
+                  label: const Text('下一个'),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override

@@ -1,3 +1,4 @@
+import 'package:github/models/commit_model/commit_connection.dart';
 import 'package:github/models/commit_model/commit_history_connection.dart';
 import 'package:github/models/commit_status_model/commit_status_model.dart';
 import 'package:github/models/git_actor_model/git_actor_model.dart';
@@ -11,6 +12,7 @@ part 'commit_model.g.dart';
 class CommitModel {
   const CommitModel({
     this.id = '',
+    this.oid = '',
     this.commitUrl = '',
     this.message = '',
     this.additions = 0,
@@ -19,9 +21,11 @@ class CommitModel {
     this.committer = const GitActorModel(),
     this.status = const CommitStatusModel(),
     this.history = const CommitHistoryConnection(),
+    this.parents = const CommitConnection(),
   });
 
   final String id;
+  final String oid;
   final String commitUrl;
   final String message;
   final int additions;
@@ -30,6 +34,7 @@ class CommitModel {
   final GitActorModel committer;
   final CommitStatusModel status;
   final CommitHistoryConnection history;
+  final CommitConnection parents;
 
   factory CommitModel.fromJson(json) {
     return _$CommitModelFromJson(json);

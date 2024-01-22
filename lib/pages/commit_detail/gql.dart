@@ -6,6 +6,7 @@ String getInfo() {
       node(id: \$id) {
         ... on Commit {
           id
+          oid
           message
           status {
             id
@@ -20,6 +21,19 @@ String getInfo() {
           deletions
           changedFilesIfAvailable
           commitUrl
+          history(first: 2) {
+            nodes {
+              id
+              message
+            }
+          }
+          parents(first: 1) {
+            totalCount
+            nodes {
+              id
+              message
+            }
+          }
         }
       }
     }

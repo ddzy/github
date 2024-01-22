@@ -1,4 +1,5 @@
 import 'package:github/models/blob_model/blob_model.dart';
+import 'package:github/models/commit_model/commit_connection.dart';
 import 'package:github/models/commit_model/commit_history_connection.dart';
 import 'package:github/models/commit_model/commit_model.dart';
 import 'package:github/models/git_actor_model/git_actor_model.dart';
@@ -27,6 +28,7 @@ class GitObjectInterface {
     this.changedFilesIfAvailable = 0,
     this.committer = const GitActorModel(),
     this.history = const CommitHistoryConnection(),
+    this.parents = const CommitConnection(),
     this.entries = const [],
   });
 
@@ -47,6 +49,7 @@ class GitObjectInterface {
   final int changedFilesIfAvailable;
   final GitActorModel committer;
   final CommitHistoryConnection history;
+  final CommitConnection parents;
 
   /// [TagModel]
 
