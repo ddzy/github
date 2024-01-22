@@ -27,6 +27,7 @@ class RepositoryModel {
     this.object = const GitObjectInterface(),
     this.primaryLanguage = const LanguageModel(),
     this.defaultBranchRef = const RefModel(),
+    this.ref = const RefModel(),
     this.issues = const RepositoryIssuesConnection(),
     this.pullRequests = const RepositoryPrsConnection(),
     this.discussions = const RepositoryDiscussionsConnection(),
@@ -45,6 +46,7 @@ class RepositoryModel {
   final GitObjectInterface object;
   final LanguageModel primaryLanguage;
   final RefModel defaultBranchRef;
+  final RefModel ref;
   final RepositoryIssuesConnection issues;
   final RepositoryPrsConnection pullRequests;
   final RepositoryDiscussionsConnection discussions;

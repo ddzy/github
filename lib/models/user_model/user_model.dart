@@ -33,7 +33,7 @@ class UserModel {
   final UserStarredRepositoriesConnection starredRepositories;
   final UserListsConnection lists;
 
-  UserModel({
+  const UserModel({
     this.login = '',
     this.id = '',
     this.avatarUrl = 'https://iph.href.lu/879x200?fg=666666&bg=cccccc',

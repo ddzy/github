@@ -14,6 +14,13 @@ GitObjectInterface _$GitObjectInterfaceFromJson(Map<String, dynamic> json) =>
       commitUrl: json['commitUrl'] as String? ?? '',
       text: json['text'] as String? ?? '',
       byteSize: json['byteSize'] as int? ?? 0,
+      message: json['message'] as String? ?? '',
+      committer: json['committer'] == null
+          ? const GitActorModel()
+          : GitActorModel.fromJson(json['committer']),
+      history: json['history'] == null
+          ? const CommitHistoryConnection()
+          : CommitHistoryConnection.fromJson(json['history']),
       entries: (json['entries'] as List<dynamic>?)
               ?.map(TreeEntryModel.fromJson)
               .toList() ??
@@ -28,5 +35,8 @@ Map<String, dynamic> _$GitObjectInterfaceToJson(GitObjectInterface instance) =>
       'commitUrl': instance.commitUrl,
       'text': instance.text,
       'byteSize': instance.byteSize,
+      'message': instance.message,
+      'committer': instance.committer.toJson(),
+      'history': instance.history.toJson(),
       'entries': instance.entries.map((e) => e.toJson()).toList(),
     };

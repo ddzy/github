@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:github/pages/commit/commit.dart';
+import 'package:github/pages/commit_detail/commit_detail.dart';
 import 'package:github/pages/create_user_list/create_user_list.dart';
 import 'package:github/pages/repo/repo.dart';
 import 'package:github/pages/repo_code/repo_code.dart';
@@ -67,7 +68,13 @@ void main() async {
   );
   var link = authLink.concat(httpLink);
   var client = $client = ValueNotifier<GraphQLClient>(
-    GraphQLClient(link: link, cache: GraphQLCache()),
+    GraphQLClient(
+      link: link,
+      cache: GraphQLCache(),
+      defaultPolicies: DefaultPolicies(
+        query: Policies(fetch: FetchPolicy.noCache),
+      ),
+    ),
   );
 
   runApp(
@@ -84,7 +91,7 @@ class MyApp extends StatelessWidget {
   final GoRouter _router = GoRouter(
     observers: [$routeObserver],
     navigatorKey: $router,
-    initialLocation: '/user/ddzy/repository/vue3-ui',
+    initialLocation: '/user/ddzy/repository/github',
     routes: [
       GoRoute(
         path: '/login',
@@ -151,6 +158,27 @@ class MyApp extends StatelessWidget {
             },
           ),
           GoRoute(
+            path: '/user/:user/repository/:repoName/commit/:branch',
+            builder: (context, state) {
+              var user = state.pathParameters['user'] ?? '';
+              var repoName = state.pathParameters['repoName'] ?? '';
+              var branch = state.pathParameters['branch'] ?? '';
+              var isDetail = state.uri.queryParameters['detail'];
+
+              return isDetail != null
+                  ? CommitDetailPage(
+                      user: user,
+                      repoName: repoName,
+                      commitId: branch,
+                    )
+                  : CommitPage(
+                      user: user,
+                      repoName: repoName,
+                      branch: branch,
+                    );
+            },
+          ),
+          GoRoute(
             path: '/user/:user/repository/:repoName/:type/:branch',
             builder: (context, state) {
               var user = state.pathParameters['user'] ?? '';
@@ -181,28 +209,6 @@ class MyApp extends StatelessWidget {
                 branch: branch,
                 path: Uri.decodeComponent(path),
                 language: language,
-              );
-            },
-          ),
-          GoRoute(
-            path: '/user/:user/repository/:repoName/commit',
-            builder: (context, state) {
-              var user = state.pathParameters['user'] ?? '';
-              var repoName = state.pathParameters['repoName'] ?? '';
-              return CommitPage(
-                user: user,
-                repoName: repoName,
-              );
-            },
-          ),
-          GoRoute(
-            path: '/user/:user/repository/:repoName/commit/:commitId',
-            builder: (context, state) {
-              var user = state.pathParameters['user'] ?? '';
-              var repoName = state.pathParameters['repoName'] ?? '';
-              return CommitPage(
-                user: user,
-                repoName: repoName,
               );
             },
           ),

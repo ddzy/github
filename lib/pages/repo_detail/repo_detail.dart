@@ -456,7 +456,10 @@ class _RepoDetailPageState extends State<RepoDetailPage> with TickerProviderStat
                 ),
                 title: const Text('提交'),
                 onTap: () {
-                  context.push('/user/${widget.user}/repository/${widget.repoName}/commit');
+                  var branch = _selectedBranch.isEmpty ? _data.defaultBranchRef.name : _selectedBranch;
+                  context.push(
+                    '/user/${widget.user}/repository/${widget.repoName}/commit/$branch',
+                  );
                 },
               ),
             ),

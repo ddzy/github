@@ -28,6 +28,9 @@ RepositoryModel _$RepositoryModelFromJson(Map<String, dynamic> json) =>
       defaultBranchRef: json['defaultBranchRef'] == null
           ? const RefModel()
           : RefModel.fromJson(json['defaultBranchRef']),
+      ref: json['ref'] == null
+          ? const RefModel()
+          : RefModel.fromJson(json['ref']),
       issues: json['issues'] == null
           ? const RepositoryIssuesConnection()
           : RepositoryIssuesConnection.fromJson(json['issues']),
@@ -56,6 +59,7 @@ Map<String, dynamic> _$RepositoryModelToJson(RepositoryModel instance) =>
       'object': instance.object.toJson(),
       'primaryLanguage': instance.primaryLanguage.toJson(),
       'defaultBranchRef': instance.defaultBranchRef.toJson(),
+      'ref': instance.ref.toJson(),
       'issues': instance.issues.toJson(),
       'pullRequests': instance.pullRequests.toJson(),
       'discussions': instance.discussions.toJson(),

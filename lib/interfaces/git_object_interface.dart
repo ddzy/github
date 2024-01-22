@@ -1,5 +1,7 @@
 import 'package:github/models/blob_model/blob_model.dart';
+import 'package:github/models/commit_model/commit_history_connection.dart';
 import 'package:github/models/commit_model/commit_model.dart';
+import 'package:github/models/git_actor_model/git_actor_model.dart';
 import 'package:github/models/tag_model/tag_model.dart';
 import 'package:github/models/tree_entry_model/tree_entry_model.dart';
 import 'package:github/models/tree_model/tree_model.dart';
@@ -17,10 +19,11 @@ class GitObjectInterface {
     this.id = '',
     this.oid = '',
     this.commitUrl = '',
-
     this.text = '',
     this.byteSize = 0,
-
+    this.message = '',
+    this.committer = const GitActorModel(),
+    this.history = const CommitHistoryConnection(),
     this.entries = const [],
   });
 
@@ -35,6 +38,9 @@ class GitObjectInterface {
   final int byteSize;
 
   /// [CommitModel]
+  final String message;
+  final GitActorModel committer;
+  final CommitHistoryConnection history;
 
   /// [TagModel]
 
