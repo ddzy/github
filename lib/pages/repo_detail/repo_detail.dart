@@ -172,18 +172,24 @@ class _RepoDetailPageState extends State<RepoDetailPage> with TickerProviderStat
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              CircleAvatar(
-                backgroundImage: FadeInImage(placeholder: MemoryImage(kTransparentImage), image: NetworkImage(_data.owner.avatarUrl)).image,
-                radius: 15,
-                backgroundColor: Colors.grey.shade200,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 8),
-                child: Text(_data.owner.name),
-              ),
-            ],
+          GestureDetector(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircleAvatar(
+                  backgroundImage: FadeInImage(placeholder: MemoryImage(kTransparentImage), image: NetworkImage(_data.owner.avatarUrl)).image,
+                  radius: 15,
+                  backgroundColor: Colors.grey.shade200,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: Text(_data.owner.name),
+                ),
+              ],
+            ),
+            onTap: () {
+              context.push('/user/${widget.user}');
+            },
           ),
           Padding(
             padding: const EdgeInsets.only(top: 12),

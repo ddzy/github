@@ -74,7 +74,9 @@ class _HomePageState extends State<HomePage> {
           context.push('/user/${_userModel.login}/repository');
         }),
         _buildMyWorkItem(Icons.blinds_closed_outlined, Colors.orange, '组织', () {}),
-        _buildMyWorkItem(Icons.star_border_outlined, Colors.yellow.shade700, '已加星标', () {}),
+        _buildMyWorkItem(Icons.star_border_outlined, Colors.yellow.shade700, '已加星标', () {
+          context.push('/user/${_userModel.login}/starred');
+        }),
       ],
     );
   }

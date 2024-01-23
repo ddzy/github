@@ -22,6 +22,10 @@ class MyPage extends StatefulWidget {
 }
 
 class _MyPageState extends State<MyPage> {
+  _MyPageState();
+
+  late String title = widget.user;
+
   @override
   void initState() {
     super.initState();
@@ -32,8 +36,8 @@ class _MyPageState extends State<MyPage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text(
-          '我的',
+        title: Text(
+          title,
         ),
         actions: const [
           Padding(
