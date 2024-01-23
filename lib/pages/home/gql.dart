@@ -1,23 +1,13 @@
+part of './home.dart';
+
 String getInfo() {
   return """ 
-    query(\$from) {
+    query() {
       viewer {
-        issues(first: 5) {
-          nodes {
-            number
-            title
-          }
-        }
-        issueComments(first: 5) {
-          nodes {
-            body
-            issue {
-              comments() {
-                totalCount
-              }
-            }
-          }
-        }
+        id
+        login
+        avatarUrl
+        name
       }
     }
   """;

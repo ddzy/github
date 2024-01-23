@@ -14,6 +14,9 @@ class IGithubConfigInterface {
 
 class IStorageTokenInterface {
   final String githubAccessToken = '__github_access_token__';
+  final String userLoginToken = '__user_login__';
+  final String userAvatarUrlToken = '__user_avatar_url__';
+  final String userIdToken = '__user_id__';
 }
 
 class $IConstantsInterface {
