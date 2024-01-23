@@ -346,7 +346,7 @@ class _MyPageState extends State<MyPage> {
                                                 padding: const EdgeInsets.only(
                                                   left: 6,
                                                 ),
-                                                child: Text(item.owner.name),
+                                                child: Text(item.owner.login),
                                               ),
                                             ],
                                           ),

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:github/components/custom_empty/custom_empty.dart';
@@ -125,7 +123,7 @@ class _RepoPageState extends State<RepoPage> {
               fontSize: 17,
             ),
           ),
-          subtitle: Text(item.owner.name),
+          subtitle: Text(item.owner.login),
           onTap: () {
             context.push('/user/${widget.user}/repository/${item.name}');
           },

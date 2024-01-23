@@ -116,8 +116,9 @@ class _RepoDetailPageState extends State<RepoDetailPage> with TickerProviderStat
       ),
     );
     if (result.hasException) {
-      inspect(result.exception);
+      
       setState(() {
+        inspect(result.exception);
         _widget = _buildPageException();
       });
     } else {
@@ -183,7 +184,7 @@ class _RepoDetailPageState extends State<RepoDetailPage> with TickerProviderStat
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 8),
-                  child: Text(_data.owner.name),
+                  child: Text(_data.owner.login),
                 ),
               ],
             ),

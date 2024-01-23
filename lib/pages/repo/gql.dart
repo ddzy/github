@@ -9,7 +9,7 @@ String getInfo() {
             id
             name
             owner {
-              name: login
+              login
               avatarUrl
             }
           }

@@ -356,7 +356,7 @@ class _StarredPageState extends State<StarredPage> {
                     Padding(
                       padding: const EdgeInsets.only(left: 6),
                       child: Text(
-                        data.owner.name,
+                        data.owner.login,
                         style: const TextStyle(
                           fontSize: 14,
                         ),
@@ -425,7 +425,7 @@ class _StarredPageState extends State<StarredPage> {
             ],
           ),
           onTap: () {
-            GoRouter.of(context).push('/user/${widget.user}/repository/${data.name}');
+            GoRouter.of(context).push('/user/${data.owner.login}/repository/${data.name}');
           },
         ),
       ),

@@ -8,16 +8,9 @@ String getInfo() {
         name
         description
         owner {
-          ... on User {
-            id
-            name: login
-            avatarUrl
-          }
-          ... on Organization {
-            id
-            name
-            avatarUrl
-          }
+          id
+          login
+          avatarUrl
         }
         homepageUrl
         forkCount

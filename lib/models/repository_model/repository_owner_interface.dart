@@ -9,12 +9,12 @@ part 'repository_owner_interface.g.dart';
 class RepositoryOwnerInterface {
   const RepositoryOwnerInterface({
     this.id = '',
-    this.name = '',
+    this.login = '',
     this.avatarUrl = '',
   });
 
   final String id;
-  final String name;
+  final String login;
   final String avatarUrl;
 
   factory RepositoryOwnerInterface.fromJson(json) {

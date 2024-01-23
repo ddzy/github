@@ -66,7 +66,9 @@ class _HomePageState extends State<HomePage> {
   Widget _buildMyWorkSection() {
     return Column(
       children: [
-        _buildMyWorkItem(Icons.adjust, Colors.green, '议题', () {}),
+        _buildMyWorkItem(Icons.adjust, Colors.green, '议题', () {
+          context.push('/user/${_userModel.login}/issue');
+        }),
         _buildMyWorkItem(Icons.hub_outlined, Colors.blue, '拉取请求', () {}),
         _buildMyWorkItem(Icons.forum_outlined, Colors.purple, '讨论', () {}),
         _buildMyWorkItem(Icons.web_outlined, Colors.grey, '项目', () {}),

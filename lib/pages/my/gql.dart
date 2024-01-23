@@ -32,16 +32,9 @@ String genGql() {
                 name
                 description
                 owner {
-                  ... on Organization {
-                    id
-                    name
-                    avatarUrl
-                  }
-                  ... on User {
-                    id
-                    name: login
-                    avatarUrl
-                  }
+                  id
+                  login
+                  avatarUrl
                 }
                 stargazerCount
                 primaryLanguage {
