@@ -4,6 +4,7 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:github/components/custom_empty/custom_empty.dart';
 import 'package:github/models/repository_model/repository_model.dart';
+import 'package:go_router/go_router.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 part 'gql.dart';
@@ -125,7 +126,9 @@ class _RepoPageState extends State<RepoPage> {
             ),
           ),
           subtitle: Text(item.owner.name),
-          onTap: () {},
+          onTap: () {
+            context.push('/user/${widget.user}/repository/${item.name}');
+          },
         ),
       ),
     );
@@ -151,7 +154,6 @@ class _RepoPageState extends State<RepoPage> {
         ),
         builder: (result, {fetchMore, refetch}) {
           if (result.isLoading) {
-            debugPrint('1');
             return _buildPageLoading();
           }
           if (result.hasException) {
