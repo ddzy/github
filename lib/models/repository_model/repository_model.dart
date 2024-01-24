@@ -13,7 +13,7 @@ part 'repository_model.g.dart';
 /// [RepositoryModel] https://docs.github.com/zh/graphql/reference/objects#repository
 @JsonSerializable(explicitToJson: true)
 class RepositoryModel {
-  RepositoryModel({
+  const RepositoryModel({
     this.id = '',
     this.name = '',
     this.description = '',

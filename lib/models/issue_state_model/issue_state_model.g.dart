@@ -1,12 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'issue_model.dart';
+part of 'issue_state_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-IssueModel _$IssueModelFromJson(Map<String, dynamic> json) => IssueModel(
+IssueStateModel _$IssueStateModelFromJson(Map<String, dynamic> json) =>
+    IssueStateModel(
       id: json['id'] as String? ?? '',
       number: json['number'] as int? ?? 0,
       author: json['author'] == null
@@ -15,7 +16,6 @@ IssueModel _$IssueModelFromJson(Map<String, dynamic> json) => IssueModel(
       title: json['title'] as String? ?? '',
       body: json['body'] as String? ?? '',
       createdAt: json['createdAt'] as String? ?? '',
-      updatedAt: json['updatedAt'] as String? ?? '',
       createdViaEmail: json['createdViaEmail'] as bool? ?? false,
       editor: json['editor'] == null
           ? const ActorModel()
@@ -23,14 +23,9 @@ IssueModel _$IssueModelFromJson(Map<String, dynamic> json) => IssueModel(
       labels: json['labels'] == null
           ? const LabelConnection()
           : LabelConnection.fromJson(json['labels']),
-      state: $enumDecodeNullable(_$IssueStateEnumEnumMap, json['state']) ??
-          IssueStateEnum.OPEN,
-      repository: json['repository'] == null
-          ? const RepositoryModel()
-          : RepositoryModel.fromJson(json['repository']),
     );
 
-Map<String, dynamic> _$IssueModelToJson(IssueModel instance) =>
+Map<String, dynamic> _$IssueStateModelToJson(IssueStateModel instance) =>
     <String, dynamic>{
       'id': instance.id,
       'number': instance.number,
@@ -38,15 +33,7 @@ Map<String, dynamic> _$IssueModelToJson(IssueModel instance) =>
       'title': instance.title,
       'body': instance.body,
       'createdAt': instance.createdAt,
-      'updatedAt': instance.updatedAt,
       'createdViaEmail': instance.createdViaEmail,
       'editor': instance.editor.toJson(),
       'labels': instance.labels.toJson(),
-      'state': _$IssueStateEnumEnumMap[instance.state]!,
-      'repository': instance.repository.toJson(),
     };
-
-const _$IssueStateEnumEnumMap = {
-  IssueStateEnum.CLOSED: 'CLOSED',
-  IssueStateEnum.OPEN: 'OPEN',
-};

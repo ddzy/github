@@ -32,7 +32,6 @@ class RepoDetailPage extends StatefulWidget {
 }
 
 class _RepoDetailPageState extends State<RepoDetailPage> with TickerProviderStateMixin {
-  final Widget _widget = Container();
   final String _title = '';
   bool _isStarLoading = false;
   String _selectedBranch = '';
