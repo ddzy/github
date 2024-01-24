@@ -32,11 +32,12 @@ class RepoDetailPage extends StatefulWidget {
 }
 
 class _RepoDetailPageState extends State<RepoDetailPage> with TickerProviderStateMixin {
-  Widget _widget = Container();
-  String _title = '';
+  final Widget _widget = Container();
+  final String _title = '';
   bool _isStarLoading = false;
   String _selectedBranch = '';
   late RepositoryModel _data;
+  late Refetch? _refetcher;
   late List<RefModel> _branches;
   late Refetch? _branchesRefetcher;
   late AnimationController _controller;
@@ -49,7 +50,6 @@ class _RepoDetailPageState extends State<RepoDetailPage> with TickerProviderStat
     super.initState();
     _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 150));
     _animation = Tween<Offset>(begin: const Offset(0, 1.5), end: const Offset(0, 0)).chain(CurveTween(curve: Curves.ease)).animate(_controller);
-    fetchInfo(isFirstFetch: true);
   }
 
   void _toggleStar(bool isStar) async {
@@ -64,7 +64,6 @@ class _RepoDetailPageState extends State<RepoDetailPage> with TickerProviderStat
         ),
       );
       _isStarLoading = false;
-      fetchInfo();
     }
 
     if (isStar) {
@@ -97,54 +96,19 @@ class _RepoDetailPageState extends State<RepoDetailPage> with TickerProviderStat
     }
   }
 
-  void fetchInfo({isFirstFetch = false}) async {
-    if (isFirstFetch) {
-      setState(() {
-        _widget = _buildPageLoading();
-      });
-    }
-
-    var result = await $client.value.query(
-      QueryOptions(
-        document: gql(getInfo()),
-        variables: {
-          'name': widget.repoName,
-          'owner': widget.user,
-          'expression': "${_selectedBranch.isEmpty ? 'HEAD' : _selectedBranch}:README.md",
-        },
-        fetchPolicy: FetchPolicy.noCache,
-      ),
-    );
-    if (result.hasException) {
-      
-      setState(() {
-        inspect(result.exception);
-        _widget = _buildPageException();
-      });
-    } else {
-      var data = RepositoryModel.fromJson(result.data?['repository']);
-      _data = data;
-
-      setState(() {
-        _title = data.name;
-        _widget = _buildPageContent();
-      });
-    }
-  }
-
   Widget _buildPageLoading() {
     return const Center(
       child: CircularProgressIndicator(),
     );
   }
 
-  Widget _buildPageException() {
-    return const Center(
+  Widget _buildPageException(String message) {
+    return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           CustomEmpty(
-            description: 'Exception...',
+            description: message,
           ),
         ],
       ),
@@ -153,9 +117,7 @@ class _RepoDetailPageState extends State<RepoDetailPage> with TickerProviderStat
 
   Widget _buildPageContent() {
     return RefreshIndicator(
-      onRefresh: () async {
-        fetchInfo();
-      },
+      onRefresh: () async {},
       child: ListView(
         children: [
           _buildProfile(),
@@ -546,7 +508,8 @@ class _RepoDetailPageState extends State<RepoDetailPage> with TickerProviderStat
                   }
                   if (result.hasException) {
                     inspect(result.exception);
-                    return _buildPageException();
+                    var errorMessage = result.exception?.graphqlErrors.firstOrNull?.message ?? '';
+                    return _buildPageException(errorMessage);
                   }
                   var branchData = RepositoryModel.fromJson(result.data?['repository']);
                   _branches = branchData.refs.nodes;
@@ -593,9 +556,7 @@ class _RepoDetailPageState extends State<RepoDetailPage> with TickerProviderStat
                             onChanged: (value) {
                               _selectedBranch = value!;
                               Navigator.of(context).pop();
-                              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                                fetchInfo();
-                              });
+                              _refetcher!();
                             },
                           ),
                         ),
@@ -654,13 +615,6 @@ class _RepoDetailPageState extends State<RepoDetailPage> with TickerProviderStat
   }
 
   @override
-  void reassemble() {
-    // TODO: implement reassemble
-    super.reassemble();
-    fetchInfo(isFirstFetch: true);
-  }
-
-  @override
   void dispose() {
     // TODO: implement dispose
     super.dispose();
@@ -676,7 +630,33 @@ class _RepoDetailPageState extends State<RepoDetailPage> with TickerProviderStat
           child: Text(_title),
         ),
       ),
-      body: _widget,
+      body: Query(
+        options: QueryOptions(
+          document: gql(getInfo()),
+          variables: {
+            'name': widget.repoName,
+            'owner': widget.user,
+            'expression': "${_selectedBranch.isEmpty ? 'HEAD' : _selectedBranch}:README.md",
+          },
+          fetchPolicy: FetchPolicy.noCache,
+        ),
+        builder: (result, {fetchMore, refetch}) {
+          _refetcher = refetch;
+
+          if (result.isLoading) {
+            return _buildPageLoading();
+          }
+          if (result.hasException) {
+            var errorMessage = result.exception?.graphqlErrors.firstOrNull?.message ?? '';
+            return _buildPageException(errorMessage);
+          }
+
+          var data = RepositoryModel.fromJson(result.data?['repository']);
+          _data = data;
+
+          return _buildPageContent();
+        },
+      ),
     );
   }
 }
