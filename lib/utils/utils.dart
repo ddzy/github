@@ -49,7 +49,7 @@ class IUtilsInterface {
     const eachHour = 60 * eachMinute;
     const eachDay = 24 * eachHour;
     const eachMonth = 30 * eachDay;
-    const eachYear = 365 * eachMonth;
+    const eachYear = 12 * eachMonth;
     var msBetween = now.difference(from).inMilliseconds;
 
     switch (msBetween) {

@@ -91,6 +91,12 @@ class _IssuePageState extends State<IssuePage> {
           ),
           title: Text(item.title),
           subtitle: Text('${item.repository.owner.login} / ${item.repository.name} #${item.number}'),
+          trailing: Text(
+            $utils.formatTimesAgo(
+              DateTime.parse(item.createdAt),
+              DateTime.now(),
+            ),
+          ),
           onTap: () {},
         ),
       ),
@@ -168,9 +174,17 @@ class _IssuePageState extends State<IssuePage> {
               ? {
                   'login': widget.user,
                   'name': widget.repoName,
+                  'orderBy': {
+                    'direction': 'DESC',
+                    'field': 'CREATED_AT',
+                  },
                 }
               : {
                   'login': widget.user,
+                  'orderBy': {
+                    'direction': 'DESC',
+                    'field': 'CREATED_AT',
+                  },
                 },
         ),
         builder: (result, {fetchMore, refetch}) {
