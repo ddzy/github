@@ -1,64 +1,41 @@
 part of 'issue.dart';
 
-enum IssueFilterViaStates {
+enum IssueFilterViaStatesEnum {
   all('所有', 'all'),
   open('已激活', 'OPEN'),
   closed('已关闭', 'CLOSED');
 
-  const IssueFilterViaStates(this.label, this.value);
+  const IssueFilterViaStatesEnum(this.label, this.value);
 
   final String label;
   final String value;
 }
 
-enum IssueFilterViaOrderByDirection {
-  asc('最早', 'ASC'),
-  desc('最新', 'DESC');
+enum IssueFilterViaOrderByEnum {
+  createdAtDesc('最新', 'CREATED_AT.DESC'),
+  createdAtAsc('最早', 'CREATED_AT.ASC'),
+  commentsDesc('最多评论', 'COMMENTS.DESC'),
+  commentsAsc('最少评论', 'COMMENTS.ASC'),
+  updatedAtDesc('近期更新内容', 'UPDATED_AT.DESC'),
+  updatedAtAsc('最近最少更新', 'UPDATED_AT.ASC'),
+  ;
 
-  const IssueFilterViaOrderByDirection(this.label, this.value);
-
-  final String label;
-  final String value;
-}
-
-enum IssueFilterViaOrderByField {
-  comments('评论数', 'COMMENTS'),
-  createdAt('创建时间', 'CREATED_AT'),
-  updatedAt('更新时间', 'UPDATED_AT');
-
-  const IssueFilterViaOrderByField(this.label, this.value);
+  const IssueFilterViaOrderByEnum(this.label, this.value);
 
   final String label;
   final String value;
 }
 
-enum IssueFilterViaFiltersKey {
+enum IssueFilterViaFiltersEnum {
   createdBy('已创建', 'createdBy'),
   assignee('已分配', 'assignee'),
   mentioned('已提及', 'mentioned'),
   viewerSubscribed('相关', 'viewerSubscribed'),
   ;
 
-  const IssueFilterViaFiltersKey(this.label, this.value);
+  const IssueFilterViaFiltersEnum(this.label, this.value);
   final String label;
   final String value;
-}
-
-class IssueFilterViaOrderBy {
-  const IssueFilterViaOrderBy({
-    this.direction,
-    this.field,
-  });
-
-  final IssueFilterViaOrderByDirection? direction;
-  final IssueFilterViaOrderByField? field;
-
-  Map<String, dynamic> toJson() {
-    return {
-      'direction': direction?.value,
-      'field': field?.value,
-    };
-  }
 }
 
 class IssueFilterViaFilters {
@@ -77,8 +54,24 @@ class IssueFilterViaFilters {
   }
 
   Map<String, dynamic> toJson() {
-    inspect(_map.keys);
     return _map;
+  }
+}
+
+class IssueFilterViaOrderBy {
+  const IssueFilterViaOrderBy({
+    this.direction,
+    this.field,
+  });
+
+  final String? direction;
+  final String? field;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'direction': direction,
+      'field': field,
+    };
   }
 }
 
@@ -89,7 +82,7 @@ class IssueFilter {
     this.filterBy,
   });
 
-  List<IssueFilterViaStates>? states;
+  List<IssueFilterViaStatesEnum>? states;
   IssueFilterViaOrderBy? orderBy;
   IssueFilterViaFilters? filterBy;
 

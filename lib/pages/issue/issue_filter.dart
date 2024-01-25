@@ -19,18 +19,18 @@ class IssuePageFilter extends StatefulWidget {
 class _IssuePageFilterState extends State<IssuePageFilter> {
   Widget _buildStatesSelector() {
     return DropdownMenu(
-      initialSelection: IssueFilterViaStates.all,
+      initialSelection: IssueFilterViaStatesEnum.all,
       inputDecorationTheme: const InputDecorationTheme(
         border: UnderlineInputBorder(),
       ),
       dropdownMenuEntries: [
-        ...IssueFilterViaStates.values.map((e) {
+        ...IssueFilterViaStatesEnum.values.map((e) {
           return DropdownMenuEntry(value: e, label: e.label);
         }),
       ],
       onSelected: (value) {
         // 过滤掉“全部”
-        if (value == IssueFilterViaStates.all) {
+        if (value == IssueFilterViaStatesEnum.all) {
           widget.variables.states = null;
         } else {
           widget.variables.states = [value!];
@@ -42,22 +42,43 @@ class _IssuePageFilterState extends State<IssuePageFilter> {
 
   Widget _buildFilterBySelector() {
     return DropdownMenu(
-      initialSelection: IssueFilterViaFiltersKey.createdBy,
+      initialSelection: IssueFilterViaFiltersEnum.createdBy,
       inputDecorationTheme: const InputDecorationTheme(
         border: UnderlineInputBorder(),
       ),
       dropdownMenuEntries: [
-        ...IssueFilterViaFiltersKey.values.map((e) {
+        ...IssueFilterViaFiltersEnum.values.map((e) {
           return DropdownMenuEntry(value: e, label: e.label);
         }),
       ],
       onSelected: (value) {
-        if (value == IssueFilterViaFiltersKey.viewerSubscribed) {
+        if (value == IssueFilterViaFiltersEnum.viewerSubscribed) {
           widget.variables.filterBy = IssueFilterViaFilters().setValue(value!.value, true);
         } else {
           widget.variables.filterBy = IssueFilterViaFilters().setValue(value!.value, widget.user);
         }
         widget.onRefetch();
+      },
+    );
+  }
+
+  Widget _buildOrderBySelector() {
+    return DropdownMenu(
+      initialSelection: IssueFilterViaOrderByEnum.createdAtAsc,
+      inputDecorationTheme: const InputDecorationTheme(
+        border: UnderlineInputBorder(),
+      ),
+      dropdownMenuEntries: [
+        ...IssueFilterViaOrderByEnum.values.map((e) {
+          return DropdownMenuEntry(value: e, label: e.label);
+        }),
+      ],
+      onSelected: (value) {
+        List<String> strs = value!.value.split('.');
+        if (strs.isNotEmpty) {
+          widget.variables.orderBy = IssueFilterViaOrderBy(field: strs.firstOrNull, direction: strs.lastOrNull);
+          widget.onRefetch();
+        }
       },
     );
   }
@@ -75,6 +96,10 @@ class _IssuePageFilterState extends State<IssuePageFilter> {
             Padding(
               padding: const EdgeInsets.only(left: 20),
               child: _buildFilterBySelector(),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 20),
+              child: _buildOrderBySelector(),
             ),
           ],
         ),
