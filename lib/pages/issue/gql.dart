@@ -2,9 +2,9 @@ part of './issue.dart';
 
 String getIssuesByUser() {
   return """ 
-    query(\$login: String!, \$after: String, \$states: [IssueState!], \$orderBy: IssueOrder) {
+    query(\$login: String!, \$after: String, \$states: [IssueState!], \$orderBy: IssueOrder, \$filterBy: IssueFilters) {
       user(login: \$login) {
-        issues(first: 20, after: \$after, states: \$states, orderBy: \$orderBy) {
+        issues(first: 20, after: \$after, states: \$states, orderBy: \$orderBy, filterBy: \$filterBy) {
           nodes {
             number
             title
@@ -30,9 +30,9 @@ String getIssuesByUser() {
 
 String getIssuesByRepo() {
   return """ 
-    query(login: \$login, name: \$name, \$after: String, \$states: [IssueState!], \$orderBy: IssueOrder) {
+    query(login: \$login, name: \$name, \$after: String, \$states: [IssueState!], \$orderBy: IssueOrder, \$filterBy: IssueFilters) {
       repository(owner: \$login, name: \$name) {
-        issues(first: 20, after: \$after, states: \$states, orderBy: \$orderBy) {
+        issues(first: 20, after: \$after, states: \$states, orderBy: \$orderBy, filterBy: \$filterBy) {
           nodes {
             number
             title

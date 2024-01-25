@@ -178,6 +178,7 @@ class _IssuePageState extends State<IssuePage> {
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(60),
           child: IssuePageFilter(
+            user: widget.user,
             onRefetch: handleRefetch,
             variables: _filterVariables,
           ),
@@ -213,6 +214,10 @@ class _IssuePageState extends State<IssuePage> {
           var nodes = data?['nodes'] as List;
           _issues = nodes.map((e) => IssueModel.fromJson(e)).toList();
           _endCursor = data?['pageInfo']?['endCursor'];
+
+          if (_issues.isEmpty) {
+            return _buildPageException('无数据');
+          }
 
           return _buildPageContent();
         },

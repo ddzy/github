@@ -32,6 +32,18 @@ enum IssueFilterViaOrderByField {
   final String value;
 }
 
+enum IssueFilterViaFiltersKey {
+  createdBy('已创建', 'createdBy'),
+  assignee('已分配', 'assignee'),
+  mentioned('已提及', 'mentioned'),
+  viewerSubscribed('相关', 'viewerSubscribed'),
+  ;
+
+  const IssueFilterViaFiltersKey(this.label, this.value);
+  final String label;
+  final String value;
+}
+
 class IssueFilterViaOrderBy {
   const IssueFilterViaOrderBy({
     this.direction,
@@ -49,19 +61,43 @@ class IssueFilterViaOrderBy {
   }
 }
 
+class IssueFilterViaFilters {
+  IssueFilterViaFilters();
+
+  final Map<String, dynamic> _map = {
+    'assignee': null,
+    'createdBy': null,
+    'mentioned': null,
+    'viewerSubscribed': null,
+  };
+
+  IssueFilterViaFilters setValue(String key, dynamic value) {
+    _map[key] = value;
+    return this;
+  }
+
+  Map<String, dynamic> toJson() {
+    inspect(_map.keys);
+    return _map;
+  }
+}
+
 class IssueFilter {
   IssueFilter({
     this.states,
     this.orderBy,
+    this.filterBy,
   });
 
   List<IssueFilterViaStates>? states;
   IssueFilterViaOrderBy? orderBy;
+  IssueFilterViaFilters? filterBy;
 
   Map<String, dynamic> toJson() {
     return {
       'states': states?.map((e) => e.value).toList(),
       'orderBy': orderBy?.toJson(),
+      'filterBy': filterBy?.toJson(),
     };
   }
 }
