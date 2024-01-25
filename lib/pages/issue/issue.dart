@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:github/components/custom_empty/custom_empty.dart';
 import 'package:github/enums/issue_state_enum.dart';
 import 'package:github/models/issue_model/issue_model.dart';
+import 'package:github/pages/issue/issue_filter.dart';
 import 'package:github/utils/utils.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 part 'gql.dart';
+part 'filter.dart';
 
 class IssuePage extends StatefulWidget {
   const IssuePage({super.key, required this.user, this.repoName});
@@ -29,8 +31,15 @@ class _IssuePageState extends State<IssuePage> {
   String? _endCursor;
   bool _isFetchMoreing = false;
   bool _isRepoIssues = false;
+  final IssueFilter _filterVariables = IssueFilter();
   List<IssueModel> _issues = [];
   final ScrollController _controller = ScrollController();
+
+  handleRefetch() async {
+    setState(() {
+      _refetch!();
+    });
+  }
 
   Widget _buildPageLoading() {
     return const Center(
@@ -166,25 +175,27 @@ class _IssuePageState extends State<IssuePage> {
         actions: [
           IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
         ],
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(60),
+          child: IssuePageFilter(
+            onRefetch: handleRefetch,
+            variables: _filterVariables,
+          ),
+        ),
       ),
       body: Query(
         options: QueryOptions(
+          fetchPolicy: FetchPolicy.noCache,
           document: gql(_isRepoIssues ? getIssuesByRepo() : getIssuesByUser()),
           variables: _isRepoIssues
               ? {
                   'login': widget.user,
                   'name': widget.repoName,
-                  'orderBy': {
-                    'direction': 'DESC',
-                    'field': 'CREATED_AT',
-                  },
+                  ..._filterVariables.toJson(),
                 }
               : {
                   'login': widget.user,
-                  'orderBy': {
-                    'direction': 'DESC',
-                    'field': 'CREATED_AT',
-                  },
+                  ..._filterVariables.toJson(),
                 },
         ),
         builder: (result, {fetchMore, refetch}) {
