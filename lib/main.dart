@@ -3,6 +3,7 @@ import 'package:github/pages/commit/commit.dart';
 import 'package:github/pages/commit_detail/commit_detail.dart';
 import 'package:github/pages/create_user_list/create_user_list.dart';
 import 'package:github/pages/issue/issue.dart';
+import 'package:github/pages/issue_detail/issue_detail.dart';
 import 'package:github/pages/repo/repo.dart';
 import 'package:github/pages/repo_code/repo_code.dart';
 import 'package:github/pages/repo_detail/repo_detail.dart';
@@ -155,15 +156,6 @@ class MyApp extends StatelessWidget {
             },
           ),
           GoRoute(
-            path: '/user/:user/issue/:issueId',
-            builder: (context, state) {
-              var user = state.pathParameters['user'] ?? '';
-              return RepoPage(
-                user: user,
-              );
-            },
-          ),
-          GoRoute(
             path: '/user/:user/repository/:repoName',
             builder: (context, state) {
               var user = state.pathParameters['user'] ?? '';
@@ -182,6 +174,19 @@ class MyApp extends StatelessWidget {
               return IssuePage(
                 user: user,
                 repoName: repoName,
+              );
+            },
+          ),
+          GoRoute(
+            path: '/user/:user/repository/:repoName/issue/:issueNumber',
+            builder: (context, state) {
+              var user = state.pathParameters['user'] ?? '';
+              var repoName = state.pathParameters['repoName'] ?? '';
+              var issueNumber = state.pathParameters['issueNumber'] ?? '0';
+              return IssueDetailPage(
+                user: user,
+                repoName: repoName,
+                issueNumber: int.parse(issueNumber),
               );
             },
           ),

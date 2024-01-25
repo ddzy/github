@@ -1,11 +1,10 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:github/components/custom_empty/custom_empty.dart';
 import 'package:github/enums/issue_state_enum.dart';
 import 'package:github/models/issue_model/issue_model.dart';
 import 'package:github/pages/issue/issue_filter.dart';
 import 'package:github/utils/utils.dart';
+import 'package:go_router/go_router.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 part 'gql.dart';
@@ -106,7 +105,9 @@ class _IssuePageState extends State<IssuePage> {
               DateTime.now(),
             ),
           ),
-          onTap: () {},
+          onTap: () {
+            context.push('/user/${item.repository.owner.login}/repository/${item.repository.name}/issue/${item.number}');
+          },
         ),
       ),
     );
