@@ -50,7 +50,7 @@ String removeReaction() {
       removeReaction(
         input: {
           content: \$content
-          id: \$id
+          subjectId: \$id
         }
       ) {
         clientMutationId
@@ -65,7 +65,7 @@ String addReaction() {
       addReaction(
         input: {
           content: \$content
-          id: \$id
+          subjectId: \$id
         }
       ) {
         clientMutationId

@@ -3,11 +3,10 @@ import 'dart:developer';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_emoji/flutter_emoji.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:github/components/custom_empty/custom_empty.dart';
 import 'package:github/components/custom_markdown_viewbox/custom_markdown_viewbox.dart';
 import 'package:github/enums/issue_state_enum.dart';
-import 'package:github/enums/reaction_content_enum.dart';
+import 'package:github/main.dart';
 import 'package:github/models/issue_comment_model/issue_comment_model.dart';
 import 'package:github/models/issue_model/issue_model.dart';
 import 'package:github/models/reaction_group_model/reaction_group_model.dart';
@@ -31,7 +30,31 @@ class IssueDetailPage extends StatefulWidget {
 
 class _IssueDetailPageState extends State<IssueDetailPage> {
   IssueModel _issueInfo = const IssueModel();
+  bool _isFirstlyFetch = true;
+  bool _isUpdatingReaction = false;
+  Refetch? _refetch;
   final EmojiParser emojiParser = EmojiParser();
+
+  void updateReaction(bool isAddReaction, String id, String content) async {
+    if (!_isUpdatingReaction) {
+      _isUpdatingReaction = true;
+      _isFirstlyFetch = false;
+    }
+    var res = await $client.value.mutate(
+      MutationOptions(
+        document: gql(isAddReaction ? addReaction() : removeReaction()),
+        variables: {
+          'id': id,
+          'content': content,
+        },
+      ),
+    );
+    _isUpdatingReaction = false;
+
+    if ($utils.isExist(res.data)) {
+      _refetch!();
+    }
+  }
 
   Widget _buildPageLoading() {
     return const Center(
@@ -198,7 +221,7 @@ class _IssueDetailPageState extends State<IssueDetailPage> {
                       scrollDirection: Axis.horizontal,
                       child: Row(
                         children: [
-                          ...item.reactionGroups.map((e) => _buildEmojiGroupItem(e)),
+                          ...item.reactionGroups.map((e) => _buildEmojiGroupItem(e, item.id)),
                         ],
                       ),
                     ),
@@ -212,7 +235,7 @@ class _IssueDetailPageState extends State<IssueDetailPage> {
     );
   }
 
-  Widget _buildEmojiGroupItem(ReactionGroupModel group) {
+  Widget _buildEmojiGroupItem(ReactionGroupModel group, String commentId) {
     return Visibility(
       visible: group.reactors.totalCount > 0,
       child: Padding(
@@ -237,6 +260,7 @@ class _IssueDetailPageState extends State<IssueDetailPage> {
           ),
           onTap: () {
             var nextReacted = !group.viewerHasReacted;
+            updateReaction(nextReacted, commentId, group.content.content);
           },
         ),
       ),
@@ -263,16 +287,15 @@ class _IssueDetailPageState extends State<IssueDetailPage> {
           },
         ),
         builder: (result, {fetchMore, refetch}) {
-          if (result.isLoading) {
+          if (result.isLoading && _isFirstlyFetch) {
             return _buildPageLoading();
           }
           if (result.hasException) {
             var message = result.exception?.graphqlErrors.firstOrNull?.message ?? '';
             return _buildPageException(message);
           }
-
+          _refetch = refetch;
           _issueInfo = result.parsedData!;
-          inspect(_issueInfo);
 
           return _buildPageContent();
         },
