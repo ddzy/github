@@ -28,22 +28,25 @@ class CustomMarkdownCodeHighlighter extends MarkdownElementBuilder {
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
-        child: HighlightView(
-          // The original code to be highlighted
-          element.textContent,
+        child: SizedBox(
+          width: MediaQueryData.fromView(View.of(context)).size.width,
+          child: HighlightView(
+            // The original code to be highlighted
+            element.textContent,
 
-          // Specify language
-          // It is recommended to give it a value for performance
-          language: language,
+            // Specify language
+            // It is recommended to give it a value for performance
+            language: language,
 
-          // Specify highlight theme
-          // All available themes are listed in `themes` folder
-          // theme:
-          //     MediaQueryData.fromWindow(WidgetsBinding.instance!.window).platformBrightness == Brightness.light ? atomOneLightTheme : atomOneDarkTheme,
-          theme: MediaQueryData.fromView(View.of(context)).platformBrightness == Brightness.light ? atomOneLightTheme : atomOneDarkTheme,
+            // Specify highlight theme
+            // All available themes are listed in `themes` folder
+            // theme:
+            //     MediaQueryData.fromWindow(WidgetsBinding.instance!.window).platformBrightness == Brightness.light ? atomOneLightTheme : atomOneDarkTheme,
+            theme: MediaQueryData.fromView(View.of(context)).platformBrightness == Brightness.light ? atomOneLightTheme : atomOneDarkTheme,
 
-          // Specify padding
-          padding: const EdgeInsets.all(8),
+            // Specify padding
+            padding: const EdgeInsets.all(8),
+          ),
         ),
       ),
     );
