@@ -24,10 +24,13 @@ IssueModel _$IssueModelFromJson(Map<String, dynamic> json) => IssueModel(
           ? const LabelConnection()
           : LabelConnection.fromJson(json['labels']),
       state: $enumDecodeNullable(_$IssueStateEnumEnumMap, json['state']) ??
-          IssueStateEnum.OPEN,
+          IssueStateEnum.open,
       repository: json['repository'] == null
           ? const RepositoryModel()
           : RepositoryModel.fromJson(json['repository']),
+      comments: json['comments'] == null
+          ? const IssueCommentConnection()
+          : IssueCommentConnection.fromJson(json['comments']),
     );
 
 Map<String, dynamic> _$IssueModelToJson(IssueModel instance) =>
@@ -44,9 +47,10 @@ Map<String, dynamic> _$IssueModelToJson(IssueModel instance) =>
       'labels': instance.labels.toJson(),
       'state': _$IssueStateEnumEnumMap[instance.state]!,
       'repository': instance.repository.toJson(),
+      'comments': instance.comments.toJson(),
     };
 
 const _$IssueStateEnumEnumMap = {
-  IssueStateEnum.CLOSED: 'CLOSED',
-  IssueStateEnum.OPEN: 'OPEN',
+  IssueStateEnum.closed: 'CLOSED',
+  IssueStateEnum.open: 'OPEN',
 };

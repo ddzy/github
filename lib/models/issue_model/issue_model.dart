@@ -1,5 +1,6 @@
 import 'package:github/enums/issue_state_enum.dart';
 import 'package:github/models/actor_model/actor_model.dart';
+import 'package:github/models/issue_comment_model/issue_comment_connection.dart';
 import 'package:github/models/label_model/label_connection.dart';
 import 'package:github/models/repository_model/repository_model.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -21,8 +22,9 @@ class IssueModel {
     this.createdViaEmail = false,
     this.editor = const ActorModel(),
     this.labels = const LabelConnection(),
-    this.state = IssueStateEnum.OPEN,
+    this.state = IssueStateEnum.open,
     this.repository = const RepositoryModel(),
+    this.comments = const IssueCommentConnection(),
   });
 
   final String id;
@@ -37,6 +39,7 @@ class IssueModel {
   final LabelConnection labels;
   final IssueStateEnum state;
   final RepositoryModel repository;
+  final IssueCommentConnection comments;
 
   factory IssueModel.fromJson(json) {
     return _$IssueModelFromJson(json);

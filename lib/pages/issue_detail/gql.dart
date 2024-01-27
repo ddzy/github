@@ -24,9 +24,10 @@ String getInfo() {
               }
               createdAt
               bodyHTML
+              body
               reactionGroups {
                 content
-                reactors {
+                reactors() {
                   totalCount
                 }
                 viewerHasReacted
@@ -38,6 +39,36 @@ String getInfo() {
             }
           }
         }
+      }
+    }
+  """;
+}
+
+String removeReaction() {
+  return """ 
+    mutation(\$id: ID!, \$content: ReactionContent!) {
+      removeReaction(
+        input: {
+          content: \$content
+          id: \$id
+        }
+      ) {
+        clientMutationId
+      }
+    }
+  """;
+}
+
+String addReaction() {
+  return """ 
+    mutation(\$id: ID!, \$content: ReactionContent!) {
+      addReaction(
+        input: {
+          content: \$content
+          id: \$id
+        }
+      ) {
+        clientMutationId
       }
     }
   """;

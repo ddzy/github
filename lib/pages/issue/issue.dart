@@ -82,12 +82,12 @@ class _IssuePageState extends State<IssuePage> {
           leading: Builder(
             builder: (context) {
               switch (item.state) {
-                case IssueStateEnum.OPEN:
+                case IssueStateEnum.open:
                   return const Icon(
                     Icons.adjust,
                     color: Colors.green,
                   );
-                case IssueStateEnum.CLOSED:
+                case IssueStateEnum.closed:
                   return const Icon(
                     Icons.adjust,
                     color: Colors.red,
