@@ -20,8 +20,6 @@ class CustomMarkdownCodeHighlighter extends MarkdownElementBuilder {
       language = lg.substring(9);
     }
 
-    debugPrint(language);
-
     return Container(
       color: Colors.white,
       width: MediaQueryData.fromView(View.of(context)).size.width,

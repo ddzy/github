@@ -6,6 +6,7 @@ import 'package:flutter_emoji/flutter_emoji.dart';
 import 'package:github/components/custom_empty/custom_empty.dart';
 import 'package:github/components/custom_markdown_viewbox/custom_markdown_viewbox.dart';
 import 'package:github/enums/issue_state_enum.dart';
+import 'package:github/enums/reaction_content_enum.dart';
 import 'package:github/main.dart';
 import 'package:github/models/issue_comment_model/issue_comment_model.dart';
 import 'package:github/models/issue_model/issue_model.dart';
@@ -215,7 +216,22 @@ class _IssueDetailPageState extends State<IssueDetailPage> {
               ),
               Row(
                 children: [
-                  IconButton(onPressed: () {}, icon: const Icon(Icons.emoji_emotions_outlined)),
+                  IconButton(
+                    onPressed: () async {
+                      var prevReactions = item.reactionGroups.where((element) => element.viewerHasReacted).map((e) => e.content).toList();
+                      ReactionContentEnum? newReaction = await showDialog(
+                        context: context,
+                        builder: (context) {
+                          return _buildSelectEmojiDialog(context, prevReactions);
+                        },
+                      );
+                      if (newReaction != null) {
+                        var isAddReaction = !prevReactions.contains(newReaction);
+                        updateReaction(isAddReaction, item.id, newReaction.content);
+                      }
+                    },
+                    icon: const Icon(Icons.emoji_emotions_outlined),
+                  ),
                   Expanded(
                     child: SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
@@ -263,6 +279,45 @@ class _IssueDetailPageState extends State<IssueDetailPage> {
             updateReaction(nextReacted, commentId, group.content.content);
           },
         ),
+      ),
+    );
+  }
+
+  Widget _buildSelectEmojiDialog(BuildContext context, List<ReactionContentEnum> prevReactions) {
+    return SimpleDialog(
+      surfaceTintColor: Colors.white,
+      backgroundColor: Colors.white,
+      children: [
+        Wrap(
+          alignment: WrapAlignment.spaceBetween,
+          children: [
+            ...ReactionContentEnum.values.map((e) {
+              var hasReacted = prevReactions.indexWhere((element) => element == e);
+              return _buildEmojiSelectorItem(context, e, hasReacted != -1);
+            }),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildEmojiSelectorItem(BuildContext context, ReactionContentEnum reaction, bool viewerHasReacted) {
+    return SimpleDialogOption(
+      padding: const EdgeInsets.all(0),
+      child: GestureDetector(
+        child: Chip(
+          label: Text(
+            emojiParser.emojify(emojiParser.emojify(':${reaction.name}:')),
+            style: const TextStyle(
+              fontSize: 30,
+            ),
+          ),
+          shape: const StadiumBorder(side: BorderSide(color: Colors.transparent)),
+          backgroundColor: viewerHasReacted ? Colors.purple.shade50 : Colors.white,
+        ),
+        onTap: () {
+          Navigator.of(context).pop(reaction);
+        },
       ),
     );
   }
