@@ -149,6 +149,7 @@ class _RepoPageState extends State<RepoPage> {
         options: QueryOptions(
           document: gql(getInfo()),
           variables: _variables,
+          fetchPolicy: FetchPolicy.noCache,
         ),
         builder: (result, {fetchMore, refetch}) {
           if (result.isLoading) {
