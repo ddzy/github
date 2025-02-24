@@ -13,11 +13,12 @@ GitObjectInterface _$GitObjectInterfaceFromJson(Map<String, dynamic> json) =>
       oid: json['oid'] as String? ?? '',
       commitUrl: json['commitUrl'] as String? ?? '',
       text: json['text'] as String? ?? '',
-      byteSize: json['byteSize'] as int? ?? 0,
+      byteSize: (json['byteSize'] as num?)?.toInt() ?? 0,
       message: json['message'] as String? ?? '',
-      additions: json['additions'] as int? ?? 0,
-      deletions: json['deletions'] as int? ?? 0,
-      changedFilesIfAvailable: json['changedFilesIfAvailable'] as int? ?? 0,
+      additions: (json['additions'] as num?)?.toInt() ?? 0,
+      deletions: (json['deletions'] as num?)?.toInt() ?? 0,
+      changedFilesIfAvailable:
+          (json['changedFilesIfAvailable'] as num?)?.toInt() ?? 0,
       committer: json['committer'] == null
           ? const GitActorModel()
           : GitActorModel.fromJson(json['committer']),

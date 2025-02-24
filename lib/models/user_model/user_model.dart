@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:github/models/issue_model/issue_connection.dart';
 import 'package:github/models/user_model/user_followers_connection.dart';
 import 'package:github/models/user_model/user_following_connection.dart';
@@ -57,7 +59,8 @@ class UserModel {
   });
 
   factory UserModel.fromJson(json) {
-    return _$UserModelFromJson(json);
+    Map<String, dynamic> m = {};
+    return _$UserModelFromJson(json ?? m);
   }
 
   Map<String, dynamic> toJson() {

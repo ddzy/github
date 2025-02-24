@@ -9,7 +9,7 @@ part of 'user_repositories_connection.dart';
 UserRepositoriesConnection _$UserRepositoriesConnectionFromJson(
         Map<String, dynamic> json) =>
     UserRepositoriesConnection(
-      totalCount: json['totalCount'] as int? ?? 0,
+      totalCount: (json['totalCount'] as num?)?.toInt() ?? 0,
       nodes: (json['nodes'] as List<dynamic>?)
               ?.map(RepositoryModel.fromJson)
               .toList() ??

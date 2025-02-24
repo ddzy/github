@@ -9,7 +9,7 @@ part of 'user_followers_connection.dart';
 UserFollowersConnection _$UserFollowersConnectionFromJson(
         Map<String, dynamic> json) =>
     UserFollowersConnection(
-      totalCount: json['totalCount'] as int? ?? 0,
+      totalCount: (json['totalCount'] as num?)?.toInt() ?? 0,
     );
 
 Map<String, dynamic> _$UserFollowersConnectionToJson(

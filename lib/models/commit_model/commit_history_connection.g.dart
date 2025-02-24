@@ -9,7 +9,7 @@ part of 'commit_history_connection.dart';
 CommitHistoryConnection _$CommitHistoryConnectionFromJson(
         Map<String, dynamic> json) =>
     CommitHistoryConnection(
-      totalCount: json['totalCount'] as int? ?? 0,
+      totalCount: (json['totalCount'] as num?)?.toInt() ?? 0,
       nodes: (json['nodes'] as List<dynamic>?)
               ?.map(CommitModel.fromJson)
               .toList() ??

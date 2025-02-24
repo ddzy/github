@@ -8,7 +8,7 @@ part of 'label_connection.dart';
 
 LabelConnection _$LabelConnectionFromJson(Map<String, dynamic> json) =>
     LabelConnection(
-      totalCount: json['totalCount'] as int? ?? 0,
+      totalCount: (json['totalCount'] as num?)?.toInt() ?? 0,
       nodes: (json['nodes'] as List<dynamic>?)
               ?.map(LabelModel.fromJson)
               .toList() ??

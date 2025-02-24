@@ -9,7 +9,7 @@ part of 'reaction_group_reactors_connection.dart';
 ReactionGroupReactorsConnection _$ReactionGroupReactorsConnectionFromJson(
         Map<String, dynamic> json) =>
     ReactionGroupReactorsConnection(
-      totalCount: json['totalCount'] as int? ?? 0,
+      totalCount: (json['totalCount'] as num?)?.toInt() ?? 0,
       nodes: (json['nodes'] as List<dynamic>?)
               ?.map(ReactorInterface.fromJson)
               .toList() ??

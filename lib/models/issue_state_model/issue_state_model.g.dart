@@ -9,7 +9,7 @@ part of 'issue_state_model.dart';
 IssueStateModel _$IssueStateModelFromJson(Map<String, dynamic> json) =>
     IssueStateModel(
       id: json['id'] as String? ?? '',
-      number: json['number'] as int? ?? 0,
+      number: (json['number'] as num?)?.toInt() ?? 0,
       author: json['author'] == null
           ? const ActorModel()
           : ActorModel.fromJson(json['author']),

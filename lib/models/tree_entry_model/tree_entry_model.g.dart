@@ -13,7 +13,7 @@ TreeEntryModel _$TreeEntryModelFromJson(Map<String, dynamic> json) =>
       path: json['path'] as String? ?? '',
       type: json['type'] as String? ?? '',
       extension: json['extension'] as String? ?? '',
-      size: json['size'] as int? ?? 0,
+      size: (json['size'] as num?)?.toInt() ?? 0,
       language: json['language'] == null
           ? const LanguageModel()
           : LanguageModel.fromJson(json['language']),

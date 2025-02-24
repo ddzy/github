@@ -8,7 +8,7 @@ part of 'user_lists_connection.dart';
 
 UserListsConnection _$UserListsConnectionFromJson(Map<String, dynamic> json) =>
     UserListsConnection(
-      totalCount: json['totalCount'] as int? ?? 0,
+      totalCount: (json['totalCount'] as num?)?.toInt() ?? 0,
       nodes: (json['nodes'] as List<dynamic>?)
               ?.map(UserListModel.fromJson)
               .toList() ??

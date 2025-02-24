@@ -8,7 +8,7 @@ part of 'issue_model.dart';
 
 IssueModel _$IssueModelFromJson(Map<String, dynamic> json) => IssueModel(
       id: json['id'] as String? ?? '',
-      number: json['number'] as int? ?? 0,
+      number: (json['number'] as num?)?.toInt() ?? 0,
       author: json['author'] == null
           ? const ActorModel()
           : ActorModel.fromJson(json['author']),

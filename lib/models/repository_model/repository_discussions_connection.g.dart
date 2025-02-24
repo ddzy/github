@@ -9,7 +9,7 @@ part of 'repository_discussions_connection.dart';
 RepositoryDiscussionsConnection _$RepositoryDiscussionsConnectionFromJson(
         Map<String, dynamic> json) =>
     RepositoryDiscussionsConnection(
-      totalCount: json['totalCount'] as int? ?? 0,
+      totalCount: (json['totalCount'] as num?)?.toInt() ?? 0,
       nodes: (json['nodes'] as List<dynamic>?)
               ?.map(DiscussionModel.fromJson)
               .toList() ??

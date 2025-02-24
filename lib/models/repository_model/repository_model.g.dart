@@ -12,8 +12,8 @@ RepositoryModel _$RepositoryModelFromJson(Map<String, dynamic> json) =>
       name: json['name'] as String? ?? '',
       description: json['description'] as String? ?? '',
       descriptionHTML: json['descriptionHTML'] as String? ?? '',
-      stargazerCount: json['stargazerCount'] as int? ?? 0,
-      forkCount: json['forkCount'] as int? ?? 0,
+      stargazerCount: (json['stargazerCount'] as num?)?.toInt() ?? 0,
+      forkCount: (json['forkCount'] as num?)?.toInt() ?? 0,
       homepageUrl: json['homepageUrl'] as String? ?? '',
       viewerHasStarred: json['viewerHasStarred'] as bool? ?? false,
       owner: json['owner'] == null

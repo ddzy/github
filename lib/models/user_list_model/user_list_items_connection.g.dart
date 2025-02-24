@@ -9,7 +9,7 @@ part of 'user_list_items_connection.dart';
 UserListItemsConnection _$UserListItemsConnectionFromJson(
         Map<String, dynamic> json) =>
     UserListItemsConnection(
-      totalCount: json['totalCount'] as int? ?? 0,
+      totalCount: (json['totalCount'] as num?)?.toInt() ?? 0,
       nodes: (json['nodes'] as List<dynamic>?)
               ?.map(RepositoryModel.fromJson)
               .toList() ??

@@ -7,7 +7,7 @@ part of 'reactor_interface.dart';
 // **************************************************************************
 
 ReactorInterface _$ReactorInterfaceFromJson(Map<String, dynamic> json) =>
-    const ReactorInterface();
+    ReactorInterface();
 
 Map<String, dynamic> _$ReactorInterfaceToJson(ReactorInterface instance) =>
     <String, dynamic>{};
