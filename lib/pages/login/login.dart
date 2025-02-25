@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'dart:developer';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:github/constants/constants.dart' show $constants;
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class _Model {
   String token = $constants.githubConfig.accessToken;
@@ -10,8 +13,7 @@ class _Model {
   void save(BuildContext context) async {
     try {
       final storage = await SharedPreferences.getInstance();
-      await storage.setString($constants.storageToken.githubAccessToken,
-          $constants.githubConfig.accessToken);
+      await storage.setString($constants.storageToken.githubAccessToken, token);
       // 每两小时清除一次 token
       Timer.periodic(const Duration(hours: 2), (timer) async {
         await storage.remove($constants.storageToken.githubAccessToken);
@@ -39,6 +41,7 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   final GlobalKey<FormState> _formRef = GlobalKey<FormState>();
   final _Model _model = _Model();
+  final String _patUrl = 'https://github.com/settings/personal-access-tokens';
 
   Future<void> login() async {}
 
@@ -59,10 +62,12 @@ class _LoginState extends State<Login> {
           children: [
             TextFormField(
               initialValue: _model.token,
-              decoration: const InputDecoration(labelText: 'Client Id: '),
+              decoration: const InputDecoration(
+                labelText: 'Personal Access Token: ',
+              ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Please enter client id';
+                  return '请输入';
                 }
                 return null;
               },
@@ -75,6 +80,25 @@ class _LoginState extends State<Login> {
                 });
               },
             ),
+            const SizedBox(
+              height: 8,
+            ),
+            RichText(
+              text: TextSpan(
+                text: '点击此处生成',
+                style: const TextStyle(
+                  color: Colors.blue,
+                ),
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () async {
+                    if (await canLaunchUrl(Uri.parse(_patUrl))) {
+                      await launchUrl(Uri.parse(_patUrl));
+                    } else {
+                      throw '无法打开链接: $_patUrl';
+                    }
+                  },
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.only(top: 20),
               child: ElevatedButton(
@@ -86,7 +110,7 @@ class _LoginState extends State<Login> {
                 },
                 style: const ButtonStyle(
                     minimumSize: MaterialStatePropertyAll(Size.fromHeight(40))),
-                child: const Text('Log in'),
+                child: const Text('登 录'),
               ),
             )
           ],
