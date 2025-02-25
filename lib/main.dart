@@ -18,9 +18,11 @@ import './pages/explore/explore.dart' show ExplorePage;
 import './pages/notification/notification.dart' show NotificationPage;
 import './pages/starred/starred.dart' show StarredPage;
 import './constants/constants.dart' show $constants;
-import 'components/custom_bottom_navigation_bar/custom_bottom_navigation_bar.dart' show CustomBottomNavigationBar;
+import 'components/custom_bottom_navigation_bar/custom_bottom_navigation_bar.dart'
+    show CustomBottomNavigationBar;
 
-typedef CustomRouteObserverFunc = void Function(Route route, Route? previousRoute);
+typedef CustomRouteObserverFunc = void Function(
+    Route route, Route? previousRoute);
 
 class CustomRouteObserver extends NavigatorObserver {
   final List<CustomRouteObserverFunc> _listeners = [];
@@ -93,7 +95,7 @@ class MyApp extends StatelessWidget {
   final GoRouter _router = GoRouter(
     observers: [$routeObserver],
     navigatorKey: $router,
-    initialLocation: '/home',
+    initialLocation: '/login',
     routes: [
       GoRoute(
         path: '/login',
@@ -251,7 +253,9 @@ class MyApp extends StatelessWidget {
           return MaterialPage(
             child: Scaffold(
               body: child,
-              bottomNavigationBar: visibleNavBar.contains(state.uri.path) ? const CustomBottomNavigationBar() : null,
+              bottomNavigationBar: visibleNavBar.contains(state.uri.path)
+                  ? const CustomBottomNavigationBar()
+                  : null,
             ),
           );
         },
